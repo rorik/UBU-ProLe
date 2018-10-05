@@ -1,0 +1,12 @@
+'comment to be ignored
+@startuml
+' comment to be ignored
+Alice -> Bob: Authentication Request
+  '   comment to be ignored 2
+  '   comment to be ignored 3 '
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+  '   comment to be ignored 4
+Alice <-- Bob: Another authentication Response'comment to be ignored 5
+@enduml

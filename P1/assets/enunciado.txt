@@ -1,0 +1,84 @@
++-----------------------------------------------+
+| Enunciado provisional de la primera práctica  |
++-----------------------------------------------+
+
+Usando flex crear un programa para procesar un diagrama de
+secuencia en PlantUML realizando las operaciones necesarias 
+que al finalizar el procesado permita mostrar las siguientes 
+estadísticas:
+- el participante con el nombre más largo.
+- el número total de mensajes del diagrama.
+- el número de agrupaciones (si es que las hay).
+- la agrupación con mayor número de mensajes (y su número).
+- el mensaje con el texto más largo.
+
+Los comentarios se deben ignorar para todas las estadísticas.
+Deberá ser capaz de procesar un archivo pasándoselo por parámetro.
+
+Se valorará la calidad del código (utilizar definiciones regulares, 
+nombres de variables con significado, etc.) así como el seguimiento 
+de la especificación de PlantUML tanto como sea posible
+(http://plantuml.com/PlantUML_Language_Reference_Guide.pdf).
+
+------------------------------------------------------------------
+
+Ante una entrada como la siguiente.
+
+'Comienza el diagrama
+@startuml
+  ' Mensaje de Alumno a Profesor con el texto "Envío de práctica"
+  Alumno -> Profesor:Envío de práctica
+  ' Mensaje de Profesor a Alumno con el texto "Respuesta automática"
+  Profesor --> Alumno:	Respuesta automática
+  Alumno -> Profesor:   Solicitud de evaluación
+  Alumno <-- Profesor : Evaluación
+'Fin del diagrama
+@enduml
+
+Debería dar:
+- El participante con el nombre más largo es: Profesor.
+- El diagrama tiene 4 mensajes.
+- No tiene agrupaciones.
+- El mensaje de mayor longitud es: Solicitud de evaluación
+
+
+
+------------------------------------------------------------------
+
+Ante una entrada como la siguiente:
+
+@startuml
+  'La definición de los participantes es opcional en PlantUML
+  actor Bob
+  'Se puede especificar su orden
+  database Log order 50
+  'Se pueden renombrar los participantes por comodidad con "as"
+  actor "Alice C." as Alice order 10
+
+  Alice -> Bob:   Authentication Request
+  'Las agrupaciones comienzan con una palabra reservada (alt, loop, etc.) y finalizan con end
+  alt successful case
+    Bob -> Alice: "Authentication Accepted :)"
+  else a kind of failure
+    Bob -> Alice: Authentication Failure
+    group My own label
+      Alice -> Log : Log attack start
+      loop 1000 times
+        Alice -> Bob: DNS Attack
+      end
+    end
+  else another kind of failure
+    'Se pueden decorar las flechas para darles color...
+    Bob -[#red]> Alice: Please repeat
+    Alice \\-[#FF00FF]- Bob: "Please repeat!"
+    Alice <->o Alice : No more comments today
+  end
+@enduml
+
+Debería dar:
+- El participante con el nombre más largo es: "Alice C."
+- El diagrama tiene 8 mensajes.
+- El diagrama tiene 5 agrupaciones.
+- La agrupación "another type of failure" tiene 3 mensajes.
+- El mensaje de mayor longitud es: "Authentication Accepted :)"
+
