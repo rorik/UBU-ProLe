@@ -5,6 +5,8 @@ Alice -> Bob: Authentication Request
   '   comment to be ignored 2
   '   comment to be ignored 3 '
 Bob --> Alice: Authentication Response
+Alice -> Bob: M
+Bob --> Alice
 
 Alice -> Bob: Another authentication Request
   '   comment to be ignored 4
