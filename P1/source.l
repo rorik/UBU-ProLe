@@ -1,5 +1,6 @@
 %{
 #define ERROR(message) printf("Unexpected character string at line %d (%s)\n", currentLine, message); exit(1);
+#define BEGIND(state) printf("|%s|----Begin %d----|", yytext, state); BEGIN state; 
 unsigned currentLine = 1, messageCount = 0, groupCount = 0, longestGroupId;
 char* longestName, longestGroup, longestMessage;
 %}
@@ -21,17 +22,17 @@ ARROW {ARROWHEADLEFT}?-(\[#{ALPHANUM}+\])?-?{ARROWHEADRIGHT}?
 %x DIAG GROUP DECL DECL_OPT ORIGIN DESTINY MESS_OPT MESSAGE
 %%
 {EOL}  {currentLine++;};
-<INITIAL>@startuml BEGIN DIAG;
+<INITIAL>@startuml BEGIND(DIAG);
 <INITIAL>{ANY} ;
-<DIAG>@enduml BEGIN INITIAL;
+<DIAG>@enduml BEGIND(INITIAL);
 <DIAG>^{WHTSPACE}*{COMMENT} ;
-<DIAG>{ID} BEGIN ORIGIN;
+<DIAG>{ID} BEGIND(ORIGIN);
 <DIAG>{ANY} ECHO;
-<ORIGIN>{WHTSPACE}*{ARROW}{WHTSPACE}* BEGIN DESTINY;
+<ORIGIN>{WHTSPACE}*{ARROW}{WHTSPACE}* BEGIND(DESTINY);
 <ORIGIN>{ANY} ECHO;
-<DESTINY>{ID} BEGIN MESS_OPT;
-<MESS_OPT>':' BEGIN MESSAGE;
-<MESSAGE>{ANY} BEGIN MESSAGE;
+<DESTINY>{ID} BEGIND(MESS_OPT);
+<MESS_OPT>':' BEGIND(MESSAGE);
+<MESSAGE>{ANY} BEGIND(MESSAGE);
 %%
 int main(int argc, char **argv)
 {
