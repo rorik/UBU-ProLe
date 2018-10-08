@@ -12,3 +12,9 @@ Alice -> Bob: Another authentication Request
   '   comment to be ignored 4
 Alice <-- Bob: Another authentication Response'comment to be ignored 5
 @enduml
+'Expected:
+'Longest name    = (Alice)
+'message count   = (6)
+'group count     = (0)
+'longest group   = () length (-1)
+'longest message = (Another authentication Response)

@@ -38,7 +38,7 @@ ARROW {ARROWHEADLEFT}?-(\[#{ALPHANUM}+\])?-?{ARROWHEADRIGHT}?
 GROUPSTRT alt|opt|loop|par|break|critical|group
 GROUPRSET else
 GROUPFNSH end
-IGNORABLE database({WHTSPACE}+.*)?$
+IGNORABLE (database|autonumber|newpage|destroy|(de)?activate|create|title|hide\ footbox|skinparam|(=={WHTSPACE}+[^=\n\r]*+{WHTSPACE}+==)|"..."|"|||"|"||"{NUM}*"||")({WHTSPACE}+.*)?$
 DECLARATION (participant|actor|boundary|control|entity|database){WHTSPACE}+
 DECLARATION_OPT (actor|boundary){WHTSPACE}+
 
@@ -57,6 +57,7 @@ DECLARATION_OPT (actor|boundary){WHTSPACE}+
 <DIAG>{GROUPFNSH} 					groupEnd();
 <DIAG>{DECLARATION}					BEGIND(DECL);
 <DIAG>{ID}							participant(); BEGIND(ORIGIN);
+<DIAG>\[{ARROW}						BEGIND(DESTINY);
 <DIAG>{EOL}							NEWLINE
 <DIAG>.								ERROR("Expected declaration, group, message origin, or @enduml");
 <GROUP>{EOL}						BEGIND(DIAG); NEWLINE;
@@ -65,7 +66,9 @@ DECLARATION_OPT (actor|boundary){WHTSPACE}+
 <ORIGIN>{ARROW}						BEGIND(DESTINY);
 <ORIGIN>{WHTSPACE}*					IGNORE;
 <ORIGIN>{ANY}						ERROR("Expected arrow");
-<DESTINY>{ID}						BEGIND(MESS_OPT);
+<DESTINY>{WHTSPACE}*				IGNORE;
+<DESTINY>\]							BEGIND(MESS_OPT);
+<DESTINY>{ID}						participant(); BEGIND(MESS_OPT);
 <MESS_OPT>{WHTSPACE}*				IGNORE;
 <MESS_OPT>:{WHTSPACE}*				BEGIND(MESSAGE);
 <MESS_OPT>{EOL}						messageEnd();
@@ -78,8 +81,7 @@ DECLARATION_OPT (actor|boundary){WHTSPACE}+
 <DECL_OPT>{EOL}						BEGIND(DIAG); NEWLINE;
 
 %%
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	if(argc > 1) {
 		FILE *file;
 		file=fopen(argv[1], "r");
@@ -160,6 +162,5 @@ void groupEnd() {
 	currentGroupLevel--;
 	if (currentGroupLevel < 0) {
 		currentGroupLevel = -1;
-		BEGIND(DIAG);
 	}
 }

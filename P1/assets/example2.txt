@@ -1,4 +1,6 @@
 @startuml
+  title Example 2
+  hide footbox
   'La definición de los participantes es opcional en PlantUML
   actor Bob
   'Se puede especificar su orden
@@ -6,18 +8,36 @@
   'Se pueden renombrar los participantes por comodidad con "as"
   actor "Alice C." as Alice order 10
 
+  autonumber
+  ==  SPLITHERE  ==
+
+  ||40||
+  
+  Alice -> Bob:   Authentication Request
+  Alice ->]: Goodbye
+  newpage
+  [-> Alice: Hello
+  
+  |||
+  
   Alice -> Bob:   Authentication Request
   'Las agrupaciones comienzan con una palabra reservada (alt, loop, etc.) y finalizan con end
   alt successful case
     Bob -> Alice: "Authentication Accepted :)"
+    ...
   else a kind of failure
+    activate Bob
     Bob -> Alice: Authentication Failure
+    Bob -> Alice: Authentication Failure
+    deactivate Bob
     group My own label
-      Alice -> Log : Log attack start
+      Alice -> Bob : Log attack start
       loop 1000 times
         Alice -> Bob: DNS Attack
       end
     end
+    Bob -> Alice: Authentication Failure
+    Bob -> Alice: Authentication Failure
   else another kind of failure
     'Se pueden decorar las flechas para darles color...
     Bob -[#red]> Alice: Please repeat
@@ -25,3 +45,10 @@
     Alice <->o Alice : No more comments today
   end
 @enduml
+'Expected:
+'Longest name	 = (Alice C.)
+'message count	 = (14)
+'group count	 = (5)
+'longest group	 = (a kind of failure) length (4)
+'longest message = ("Authentication Accepted :)")
+
