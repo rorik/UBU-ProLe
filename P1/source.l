@@ -32,8 +32,8 @@ TEXT {ALPHANUM}|{FORMATTING}
 IDWORD {FORMATTING}*{ALPHANUM}{TEXT}*{ALPHANUM}{FORMATTING}*
 ID  (\"[^\"\n\r]+\")|{IDWORD}
 COMMENT '.*
-ARROWHEADLEFT (o|x)?<{1,2}|\/{1,2}|\\{1,2}
-ARROWHEADRIGHT (>{1,2}|\/{1,2}|\\{1,2})(o|x)?
+ARROWHEADLEFT [ox]?(<{1,2}|\/{1,2}|\\{1,2})?
+ARROWHEADRIGHT (>{1,2}|\/{1,2}|\\{1,2})?[ox]?
 ARROW {ARROWHEADLEFT}?-(\[#{ALPHANUM}+\])?-?{ARROWHEADRIGHT}?
 GROUPSTRT alt|opt|loop|par|break|critical|group
 GROUPRSET else
