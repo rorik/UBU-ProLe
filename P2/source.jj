@@ -1,0 +1,94 @@
+
+options {
+    BUILD_TOKEN_MANAGER=true;
+    COMMON_TOKEN_ACTION=false;
+//    DEBUG_TOKEN_MANAGER=true;
+}
+
+PARSER_BEGIN(SequenceDiagram)
+
+public class SequenceDiagram {
+    public static void main(String args[]) throws java.io.FileNotFoundException 
+                                        // throws ParseException // this is only thrown in the parser
+    {
+    SequenceDiagramTokenManager tokenManager;
+        if ( args.length < 1 ) {
+       tokenManager = new SequenceDiagramTokenManager( new SimpleCharStream(System.in) );
+        } else {
+       tokenManager = new SequenceDiagramTokenManager( 
+                 new SimpleCharStream( new java.io.FileInputStream(args[0]),0,0 ) 
+              );
+    };
+
+    Token tk;
+
+    try {
+        while ( (tk = tokenManager.getNextToken()).kind != EOF )  ;
+          System.out.println("Número de comentarios multilínea:   "+SequenceDiagramTokenManager.nMultComments);
+          System.out.println("Número de comentarios de una línea: "+SequenceDiagramTokenManager.nLineComments);
+          System.out.println("Número de líneas de comentario:     "+SequenceDiagramTokenManager.nCommentLines);
+    } catch (TokenMgrError x) {
+          System.out.println("Something wrong! Exiting.");
+          throw x;
+    };
+    }
+}
+PARSER_END(SequenceDiagram)
+
+
+TOKEN_MGR_DECLS:
+{
+    static int nLineComments=0;
+    static int nMultComments=0;
+    static int nCommentLines=0;
+}
+
+TOKEN :
+{
+ // Para tratar cadenas como "una /* cadena */ que no es //comentario"
+   < BCAD: "\"" > : CAD
+ | < BCOM1: "//" > : COM1
+ | < BCOM2: "/*" > : COM2
+ // Para evitar que constantes como '"' o '\"' se considere un inicio de cadena. 
+ | < CHAR: "'"(~[]|"\\"~[])"'" >
+}
+
+<CAD>TOKEN :
+{
+   < ECAD: "\""> : DEFAULT
+ // Caracteres escapados. Para tratar cosas como "cadena\"con comillas"
+ | < ESCCHAR: "\\"~[] >
+ | < RESTCAD: ~[] >
+ // Para que el resto de tokenes que 'ignorar' más largos
+ | < REST2CAD: (~["\"","\\"])+ >
+}
+
+<COM1>TOKEN :
+{
+   < ECOM1: "\n"> { 
+        SequenceDiagramTokenManager.nLineComments++; 
+        SequenceDiagramTokenManager.nCommentLines++; 
+    } : DEFAULT
+ | < RESTCOM1: ~[] >
+ // Para que el resto de tokenes que 'ignorar' más largos
+ | < REST2COM1: (~["\n"])+ >
+}
+
+<COM2>TOKEN :
+{
+   < ECOM2: "*/"> { 
+        SequenceDiagramTokenManager.nMultComments++; 
+        SequenceDiagramTokenManager.nCommentLines++; 
+    } : DEFAULT
+ | < NLCOM2: "\n" > {
+        SequenceDiagramTokenManager.nCommentLines++; 
+    }
+ | < RESTCOM2: ~[] >
+ // Para que el resto de tokenes que 'ignorar' más largos
+ | < REST2COM2: (~["*","/","\n"])+ >
+}
+
+SKIP :
+{
+  " " | "\t" | "\n" | "\r" | <~[]>
+}
