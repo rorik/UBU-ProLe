@@ -1,0 +1,27 @@
+@startuml
+  'La definición de los participantes es opcional en PlantUML
+  actor Bob
+  'Se puede especificar su orden
+  database Log order 50
+  'Se pueden renombrar los participantes por comodidad con "as"
+  actor "Alice C." as Alice order 10
+
+  Alice -> Bob:   Authentication Request
+  'Las agrupaciones comienzan con una palabra reservada (alt, loop, etc.) y finalizan con end
+  alt successful case
+    Bob -> Alice: "Authentication Accepted :)"
+  else a kind of failure
+    Bob -> Alice: Authentication Failure
+    group My own label
+      Alice -> Log : Log attack start
+      loop 1000 times
+        Alice -> Bob: DNS Attack
+      end
+    end
+  else another kind of failure
+    'Se pueden decorar las flechas para darles color...
+    Bob -[#red]> Alice: Please repeat
+    Alice \\-[#FF00FF]- Bob: "Please repeat!"
+    Alice <->o Alice : No more comments today
+  end
+@enduml

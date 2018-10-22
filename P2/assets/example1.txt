@@ -1,0 +1,11 @@
+/'Comienza el diagrama
+  de ejemplo.'/
+@startuml
+  ' Mensaje de Alumno a Profesor con el texto "Envío de práctica"
+  Alumno -> Profesor:Envío de práctica
+  ' Mensaje de Profesor a Alumno con el texto "Respuesta automática"
+  Profesor --> Alumno:	Respuesta automática
+  Alumno -> Profesor:   Solicitud de evaluación
+  Alumno <-- Profesor : Evaluación
+'Fin del diagrama
+@enduml
