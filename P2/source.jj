@@ -7,53 +7,101 @@ options {
 
 PARSER_BEGIN(SequenceDiagram)
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SequenceDiagram {
-    public static void main(String args[]) throws java.io.FileNotFoundException 
-                                        // throws ParseException // this is only thrown in the parser
-    {
-    SequenceDiagramTokenManager tokenManager;
-        if ( args.length < 1 ) {
-       tokenManager = new SequenceDiagramTokenManager( new SimpleCharStream(System.in) );
+    public static void main(String args[]) throws java.io.FileNotFoundException {
+        SequenceDiagramTokenManager tokenManager;
+        if (args.length < 1) {
+            tokenManager = new SequenceDiagramTokenManager(new SimpleCharStream(System.in));
         } else {
-       tokenManager = new SequenceDiagramTokenManager( 
-                 new SimpleCharStream( new java.io.FileInputStream(args[0]),0,0 ) 
-              );
-    };
+            tokenManager = new SequenceDiagramTokenManager(new SimpleCharStream( new java.io.FileInputStream(args[0]),0,0));
+        }
 
-    Token tk;
+        try {
+            while (tokenManager.getNextToken().kind != EOF); // Process All tokens.
+            System.out.println("- El participante con el nombre más largo es: " + SequenceDiagramTokenManager.longestName);
+            System.out.println("- El diagrama tiene " + SequenceDiagramTokenManager.messageCount + " mensajes.");
+            System.out.println("- El mensaje de mayor longitud es: " + SequenceDiagramTokenManager.longestMessage);
+            if (SequenceDiagramTokenManager.groupCount == 0) {
+                System.out.println("- No tiene agrupaciones.");
+            } else {
+                System.out.println("- El diagrama tiene " + SequenceDiagramTokenManager.groupCount + " agrupaciones.");
+                Map.Entry<String, Integer> largestGroup = SequenceDiagramTokenManager.getLargestGroup();
+                System.out.println("- La agrupación \"" + largestGroup.getKey() + "\" tiene " + largestGroup.getValue() + " mensajes.");
+            }
 
-    try {
-        while ( (tk = tokenManager.getNextToken()).kind != EOF )  ;
-          System.out.println("Número de comentarios multilínea:   "+SequenceDiagramTokenManager.nMultComments);
-          System.out.println("Número de comentarios de una línea: "+SequenceDiagramTokenManager.nLineComments);
-          System.out.println("Número de líneas de comentario:     "+SequenceDiagramTokenManager.nCommentLines);
-    } catch (TokenMgrError x) {
-          System.out.println("Something wrong! Exiting.");
-          throw x;
-    };
+        } catch (TokenMgrError x) {
+            System.out.println("Token Manager caught an unexpected exception, exiting...");
+            throw x;
+        }
     }
 }
 PARSER_END(SequenceDiagram)
 
-
 TOKEN_MGR_DECLS:
 {
-    static int nLineComments=0;
-    static int nMultComments=0;
-    static int nCommentLines=0;
+    static String longestName = "";
+    static String longestMessage = "";
+    static int messageCount = 0;
+    static int groupCount = 0;
+    static HashMap<String, Integer> groupStack = new HashMap<String, Integer>();
+
+    static public Map.Entry<String, Integer> getLargestGroup() {
+        Map.Entry<String, Integer> maxEntry = null;
+        for (Map.Entry<String, Integer> entry : groupStack.entrySet()) {
+            if (maxEntry == null || entry.getValue() > maxEntry.getValue()) {
+                maxEntry = entry;
+            }
+        }
+        return maxEntry;
+    }
 }
 
-TOKEN :
-{
- // Para tratar cadenas como "una /* cadena */ que no es //comentario"
-   < BCAD: "\"" > : CAD
- | < BCOM1: "//" > : COM1
- | < BCOM2: "/*" > : COM2
- // Para evitar que constantes como '"' o '\"' se considere un inicio de cadena. 
- | < CHAR: "'"(~[]|"\\"~[])"'" >
+TOKEN : {
+    // Para tratar cadenas como "una /* cadena */ que no es //comentario"
+    //  < BCAD: "\"" > : CAD
+    <COM_LINE_START: "//" > : COM_LINE
+    | <COM_MULTI_START: "/*" > : COM_MULTI
+    | <DIAGRAM_START: "@startuml"> : DIAGRAM
+    //| <STRING: "'"(~[]|"\\"~[])"'" >
 }
 
-<CAD>TOKEN :
+TOKEN : { // Definitions
+    <#EOL: "\n">
+    | <#ALPHA: ["a"-"z", "A"-"Z"]>
+    | <#NUM: ["0"-"9"]>
+    | <#ORIGIN_START: "Alumno">
+}
+
+<DIAGRAM>TOKEN : {
+    <DIAGRAM_END: "@enduml"> : DEFAULT
+    | <GROUP_START> : GROUP
+    | <ORIGIN_START> : ORIGIN
+    | <#GROUP_START: "XxxX">
+}
+<DIAGRAM>SKIP : {
+  " " | "\t" | "\n" | "\r" | <~[]>
+}
+
+<GROUP>TOKEN : {
+    <GROUP_END:"XDDD"> : DIAGRAM
+}
+<GROUP>SKIP : {
+  " " | "\t" | "\n" | "\r" | <~[]>
+}
+
+<ORIGIN>TOKEN : {
+    <ARROW: "->"> : DIAGRAM
+}
+<ORIGIN>SKIP : {
+  " " | "\t" | "\n" | "\r" | <~[]>
+}
+
+
+
+/*<CAD>TOKEN :
 {
    < ECAD: "\""> : DEFAULT
  // Caracteres escapados. Para tratar cosas como "cadena\"con comillas"
@@ -61,34 +109,21 @@ TOKEN :
  | < RESTCAD: ~[] >
  // Para que el resto de tokenes que 'ignorar' más largos
  | < REST2CAD: (~["\"","\\"])+ >
+}*/
+
+<COM_LINE>TOKEN : {
+    < COM_LINE_END: "\n"> : DEFAULT
+    | < COM_LINE_OTHER: ~[] >
+    | < COM_LINE_OTHER_LONGEST: (~["\n"])+ >
 }
 
-<COM1>TOKEN :
-{
-   < ECOM1: "\n"> { 
-        SequenceDiagramTokenManager.nLineComments++; 
-        SequenceDiagramTokenManager.nCommentLines++; 
-    } : DEFAULT
- | < RESTCOM1: ~[] >
- // Para que el resto de tokenes que 'ignorar' más largos
- | < REST2COM1: (~["\n"])+ >
+<COM_MULTI>TOKEN : {
+    <COM_MULTI_END: "*/"> : DEFAULT
+    | <COM_MULTI_OTHER: ~[]>
+    | <COM_MULTI_LONGEST: (~["*","/"])+>
 }
 
-<COM2>TOKEN :
-{
-   < ECOM2: "*/"> { 
-        SequenceDiagramTokenManager.nMultComments++; 
-        SequenceDiagramTokenManager.nCommentLines++; 
-    } : DEFAULT
- | < NLCOM2: "\n" > {
-        SequenceDiagramTokenManager.nCommentLines++; 
-    }
- | < RESTCOM2: ~[] >
- // Para que el resto de tokenes que 'ignorar' más largos
- | < REST2COM2: (~["*","/","\n"])+ >
-}
 
-SKIP :
-{
-  " " | "\t" | "\n" | "\r" | <~[]>
+SKIP : {
+  " " | "\t" | <EOL> | "\r" | <~[]>
 }
