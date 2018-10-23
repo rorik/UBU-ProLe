@@ -1,7 +1,7 @@
 options {
     BUILD_TOKEN_MANAGER=true;
     COMMON_TOKEN_ACTION=false;
-    DEBUG_TOKEN_MANAGER=true;
+    //DEBUG_TOKEN_MANAGER=true;
 }
 
 PARSER_BEGIN(SequenceDiagram)
@@ -41,12 +41,12 @@ PARSER_END(SequenceDiagram)
 
 TOKEN_MGR_DECLS:
 {
+    /* Data output variables */
     static String longestName = "";
     static String longestMessage = "";
     static int messageCount = 0;
     static int groupCount = 0;
     static HashMap<String, Integer> groupStack = new HashMap<String, Integer>();
-
     static public Map.Entry<String, Integer> getLargestGroup() {
         Map.Entry<String, Integer> maxEntry = null;
         for (Map.Entry<String, Integer> entry : groupStack.entrySet()) {
@@ -56,73 +56,156 @@ TOKEN_MGR_DECLS:
         }
         return maxEntry;
     }
-}
 
-<*>TOKEN : {
-    // Para tratar cadenas como "una /* cadena */ que no es //comentario"
-    //  < BCAD: "\"" > : CAD
-    <COM_LINE_START: "//" > : COM_LINE
-    | <COM_MULTI_START: "/'" > : COM_MULTI
-    | <DIAGRAM_START: "@startuml"> : DIAGRAM
-    //| <STRING: "'"(~[]|"\\"~[])"'" >
+    /* Internal variables */
+    static int previousState = -1;
+    static String currentGroup = null;
+    static Integer previousGroupSameName = null;
+    static void checkName() {
+        String name = image.toString().trim();
+        if (name.length() > longestName.length()) {
+            longestName = name;
+        }
+    }
+    static void checkMessage() {
+        String message = image.toString().trim();
+        if (message.length() > longestMessage.length()) {
+            longestMessage = message;
+        }
+        messageCount++;
+        if (currentGroup != null) {
+            Integer currentGroupSize = groupStack.get(currentGroup);
+            groupStack.put(currentGroup, currentGroupSize + 1);
+        }
+    }
+    static void checkGroup() {
+        String group = image.toString().trim();
+        currentGroup = group;
+        Integer currentGroupSize = groupStack.get(currentGroup);
+        if (currentGroupSize != null) {
+            previousGroupSameName = currentGroupSize;
+        }
+        groupStack.put(currentGroup, 0);
+    }
+    static void endGroup() {
+        Integer currentGroupSize = groupStack.get(currentGroup);
+        if (previousGroupSameName != null) {
+            if (previousGroupSameName > currentGroupSize) {    
+                groupStack.put(currentGroup, previousGroupSameName);
+            }
+            previousGroupSameName = null;
+        }
+        currentGroup = null;
+        groupCount++;
+    }
 }
 
 TOKEN : { // Definitions
-    <#EOL: "\n">
-    | <#ALPHA: ["a"-"z", "A"-"Z"]>
+    /* BASIC */
+    <#ALPHA: ["a"-"z", "A"-"Z"]>
     | <#NUM: ["0"-"9"]>
-    | <#ORIGIN_START: "Alumno">
-    | <#GROUP_START: "if">
+    /* REPEATED */
+    | <#COM_LINE: "'"(~["\n"])*"\n">
+    | <#ID: ("\""(~["\"","\n","\r"])+"\"")|(<ALPHA>|<NUM>)+>
 }
 
-<DIAGRAM>TOKEN : {
-    <DIAGRAM_END: "@enduml"> : DEFAULT
-    | <DIAGRAM_GROUP:<GROUP_START>> : GROUP
-    | <DIAGRAM_ORIGIN:<ORIGIN_START>> : ORIGIN
+/* ALL */
+<*>TOKEN : {
+    <COM_MULTI_START: "/'" > {previousState = curLexState;} :  COM_MULTI
 }
-<DIAGRAM>SKIP : {
-  " " | "\t" | "\n" | "\r" | <~[]>
-}
-
-<GROUP>TOKEN : {
-    <GROUP_END:"----"> : DIAGRAM
-}
-<GROUP>SKIP : {
-  " " | "\t" | "\n" | "\r" | <~[]>
-}
-
-<ORIGIN>TOKEN : {
-    <ARROW: "->"> : DIAGRAM
-}
-<ORIGIN>SKIP : {
-  " " | "\t" | "\n" | "\r" | <~[]>
-}
-
-
-
-/*<CAD>TOKEN :
-{
-   < ECAD: "\""> : DEFAULT
- // Caracteres escapados. Para tratar cosas como "cadena\"con comillas"
- | < ESCCHAR: "\\"~[] >
- | < RESTCAD: ~[] >
- // Para que el resto de tokenes que 'ignorar' más largos
- | < REST2CAD: (~["\"","\\"])+ >
-}*/
-
-<COM_LINE>TOKEN : {
-    < COM_LINE_END: "\n"> : DEFAULT
-    | < COM_LINE_OTHER: ~[] >
-    | < COM_LINE_OTHER_LONGEST: (~["\n"])+ >
-}
-
-<COM_MULTI>TOKEN : {
-    <COM_MULTI_END: "'/"> : DEFAULT
+<COM_MULTI>TOKEN : { // MULTI-LINE COMMENT
+    <COM_MULTI_END: "'/"> {SwitchTo(previousState);}
     | <COM_MULTI_OTHER: ~[]>
     | <COM_MULTI_LONGEST: (~["'","/"])+>
 }
 
+/* DEFAULT | INITIAL */
+<DEFAULT>TOKEN : {
+    <DIAGRAM_START: "@startuml"> : DIAGRAM
+}
+<DEFAULT>SKIP : {
+    <DEFAULT_COM_LINE: <COM_LINE>> | "\n" | "\r"
+}
 
-SKIP : {
-  " " | "\t" | "\r" | <~[]>
+/* DIAGRAM */
+<DIAGRAM>TOKEN : {
+    <DIAGRAM_END: "@enduml"> : DEFAULT
+    | <DIAGRAM_GROUP: <GROUP_START>> : GROUP
+    | <DIAGRAM_GROUP_END: <GROUP_END>> {endGroup();}
+    | <DIAGRAM_GROUP_RESET: <GROUP_END_AND_START>> {endGroup();} : GROUP
+    | <DIAGRAM_DECLARATION_START: <DECLARATION_START>> : DECLARATION
+    | <DIAGRAM_ORIGIN: <ID>> : ORIGIN
+
+    /* DECLARATIONS */
+    | <#GROUP_START: "alt"|"opt"|"loop"|"par"|"break"|"critical"|"group">
+    | <#GROUP_END: "end">
+    | <#GROUP_END_AND_START: "else">
+    | <#DECLARATION_START: "participant"|"actor"|"boundary"|"control"|"entity"|"database">
+}
+<DIAGRAM>SKIP : {
+  <DIAGRAM_COM_LINE: <COM_LINE>> | " " | "\t" | "\n" | "\r"
+}
+
+/* GROUP */
+<GROUP>TOKEN : {
+    <GROUP_NAME: (~["\n", "\r", "'", "/"])+> {checkGroup();}
+    | <GROUP_NAME_END: "\n"|"\r"> : DIAGRAM
+}
+<GROUP>SKIP : {
+  <GROUP_COM_LINE: <COM_LINE>>
+}
+
+/* DECLARATION */
+<DECLARATION>TOKEN : {
+    <DECLARATION_ID: <ID>> {checkName();} : DECLARATION_OPTIONAL
+}
+<DECLARATION>SKIP : {
+  " " | "\t"
+}
+
+/* DECLARATION_OPTIONAL */
+<DECLARATION_OPTIONAL>TOKEN : {
+    <DECLARATION_OPTIONAL_END: "\n"|"\r"> : DIAGRAM
+}
+<DECLARATION_OPTIONAL>SKIP : {
+  <~["\n", "\r"]>
+}
+
+/* ORIGIN */
+<ORIGIN>TOKEN : {
+    <ORIGIN_ARROW: <ARROW>> : DESTINY
+
+    /* DECLARATIONS */
+    | <#ARROW_HEAD_LEFT: ("o"|"x")?(("<"){1,2}|("/"){1,2}|("\\"){1,2})?>
+    | <#ARROW_HEAD_RIGHT: ((">"){1,2}|("/"){1,2}|("\\"){1,2})?("o"|"x")?>
+    | <#ARROW_COLOR: "[#"(<ALPHA>|<NUM>)+"]">
+    | <#ARROW: (<ARROW_HEAD_LEFT>)?"-"(<ARROW_COLOR>)?("-")?(<ARROW_HEAD_RIGHT>)?>
+}
+<ORIGIN>SKIP : {
+  " " | "\t"
+}
+
+/* DESTINY */
+<DESTINY>TOKEN : {
+    <DESTINY_ID: <ID>> {checkName();} : MESSAGE_OPTIONAL
+    | <DESTINY_END: "]"> : MESSAGE_OPTIONAL
+}
+<DESTINY>SKIP : {
+  " " | "\t"
+}
+/* MESSAGE_OPTIONAL */
+<MESSAGE_OPTIONAL>TOKEN : {
+    <MESSAGE_OPTIONAL_MESSAGE: ":"> : MESSAGE
+    | <MESSAGE_OPTIONAL_END: "\n"|"\r"> : MESSAGE_OPTIONAL
+}
+<MESSAGE_OPTIONAL>SKIP : {
+  " " | "\t"
+}
+/* MESSAGE */
+<MESSAGE>TOKEN : {
+    <MESSAGE_DATA: (~["\n", "\r", "'", "/"])+> {checkMessage();}
+    | <MESSAGE_END: "\n"|"\r"> : DIAGRAM
+}
+<MESSAGE>SKIP : {
+    <MESSAGE_COM_LINE: <COM_LINE>>
 }
