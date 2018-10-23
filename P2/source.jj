@@ -1,13 +1,12 @@
 options {
     BUILD_TOKEN_MANAGER=true;
-    COMMON_TOKEN_ACTION=false;
-    //DEBUG_TOKEN_MANAGER=true;
+    DEBUG_TOKEN_MANAGER=false;
 }
 
 PARSER_BEGIN(SequenceDiagram)
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayDeque;
 
 public class SequenceDiagram {
     public static void main(String args[]) throws java.io.FileNotFoundException {
@@ -27,8 +26,8 @@ public class SequenceDiagram {
                 System.out.println("- No tiene agrupaciones.");
             } else {
                 System.out.println("- El diagrama tiene " + SequenceDiagramTokenManager.groupCount + " agrupaciones.");
-                Map.Entry<String, Integer> largestGroup = SequenceDiagramTokenManager.getLargestGroup();
-                System.out.println("- La agrupación \"" + largestGroup.getKey() + "\" tiene " + largestGroup.getValue() + " mensajes.");
+                System.out.println("- La agrupación \"" + SequenceDiagramTokenManager.largestGroup.getKey() +
+                        "\" tiene " + SequenceDiagramTokenManager.largestGroup.getValue() + " mensajes.");
             }
 
         } catch (TokenMgrError x) {
@@ -39,79 +38,59 @@ public class SequenceDiagram {
 }
 PARSER_END(SequenceDiagram)
 
-TOKEN_MGR_DECLS:
-{
+TOKEN_MGR_DECLS : {
     /* Data output variables */
     static String longestName = "";
     static String longestMessage = "";
     static int messageCount = 0;
     static int groupCount = 0;
-    static HashMap<String, Integer> groupStack = new HashMap<String, Integer>();
-    static public Map.Entry<String, Integer> getLargestGroup() {
-        Map.Entry<String, Integer> maxEntry = null;
-        for (Map.Entry<String, Integer> entry : groupStack.entrySet()) {
-            if (maxEntry == null || entry.getValue() > maxEntry.getValue()) {
-                maxEntry = entry;
-            }
-        }
-        return maxEntry;
-    }
+    static SimpleEntry<String, Integer> largestGroup = null;
 
-    /* Internal variables */
+    /* Internal variables and methods*/
     static int previousState = -1;
-    static String currentGroup = null;
-    static Integer previousGroupSameName = null;
-    static void checkName() {
-        String name = image.toString().trim();
+        // The previous state before going to multi-line comment state.
+    static ArrayDeque<SimpleEntry<String, Integer>> groupStack = new ArrayDeque<SimpleEntry<String, Integer>>();
+        // In this Queue each group is stored until it ends, the key is the name and the value the number of messages. FIFO.
+    static void checkName() { // Name on image, check if it's the longest.
+        final String name = image.toString().trim();
         if (name.length() > longestName.length()) {
             longestName = name;
         }
     }
-    static void checkMessage() {
-        String message = image.toString().trim();
+    static void checkMessage() { // Message on image, check if it's the longest, add to current group if it's inside one.
+        final String message = image.toString().trim();
         if (message.length() > longestMessage.length()) {
             longestMessage = message;
         }
         messageCount++;
-        if (currentGroup != null) {
-            Integer currentGroupSize = groupStack.get(currentGroup);
-            groupStack.put(currentGroup, currentGroupSize + 1);
+        if (groupStack.size() > 0) {
+            final SimpleEntry<String, Integer> currentGroup = groupStack.peekFirst();
+            currentGroup.setValue(currentGroup.getValue() + 1);
         }
     }
-    static void checkGroup() {
-        String group = image.toString().trim();
-        currentGroup = group;
-        Integer currentGroupSize = groupStack.get(currentGroup);
-        if (currentGroupSize != null) {
-            previousGroupSameName = currentGroupSize;
-        }
-        groupStack.put(currentGroup, 0);
+    static void startGroup() { // Group on image, append to stack.
+        groupStack.addFirst(new SimpleEntry<String, Integer>(image.toString().trim(), 0));
     }
-    static void endGroup() {
-        Integer currentGroupSize = groupStack.get(currentGroup);
-        if (previousGroupSameName != null) {
-            if (previousGroupSameName > currentGroupSize) {    
-                groupStack.put(currentGroup, previousGroupSameName);
-            }
-            previousGroupSameName = null;
+    static void endGroup() { // Remove current group from stack and check if it's the largest.
+        final SimpleEntry<String, Integer> currentGroup = groupStack.pollFirst();
+        if (currentGroup == null) {
+            throw new RuntimeException("Unexpected end of group, none was currently open.");
+        } else if (largestGroup == null || currentGroup.getValue() > largestGroup.getValue()) {
+            largestGroup = currentGroup;
         }
-        currentGroup = null;
         groupCount++;
     }
-}
-
-TOKEN : { // Definitions
-    /* BASIC */
-    <#ALPHA: ["a"-"z", "A"-"Z"]>
-    | <#NUM: ["0"-"9"]>
-    /* REPEATED */
-    | <#COM_LINE: "'"(~["\n"])*"\n">
-    | <#ID: ("\""(~["\"","\n","\r"])+"\"")|(<ALPHA>|<NUM>)+>
 }
 
 /* ALL */
 <*>TOKEN : {
     <COM_MULTI_START: "/'" > {previousState = curLexState;} :  COM_MULTI
+
+    /* DEFINITIONS */
+    | <#ALPHA: ["a"-"z", "A"-"Z"]>
+    | <#NUM: ["0"-"9"]>
+    | <#COM_LINE: "'"(~["\n"])*"\n">
+    | <#ID: ("\""(~["\"","\n","\r"])+"\"")|(<ALPHA>|<NUM>)+>
 }
 <COM_MULTI>TOKEN : { // MULTI-LINE COMMENT
     <COM_MULTI_END: "'/"> {SwitchTo(previousState);}
@@ -148,7 +127,7 @@ TOKEN : { // Definitions
 
 /* GROUP */
 <GROUP>TOKEN : {
-    <GROUP_NAME: (~["\n", "\r", "'", "/"])+> {checkGroup();}
+    <GROUP_NAME: (~["\n", "\r", "'", "/"])+> {startGroup();}
     | <GROUP_NAME_END: "\n"|"\r"> : DIAGRAM
 }
 <GROUP>SKIP : {
@@ -193,6 +172,7 @@ TOKEN : { // Definitions
 <DESTINY>SKIP : {
   " " | "\t"
 }
+
 /* MESSAGE_OPTIONAL */
 <MESSAGE_OPTIONAL>TOKEN : {
     <MESSAGE_OPTIONAL_MESSAGE: ":"> : MESSAGE
@@ -201,6 +181,7 @@ TOKEN : { // Definitions
 <MESSAGE_OPTIONAL>SKIP : {
   " " | "\t"
 }
+
 /* MESSAGE */
 <MESSAGE>TOKEN : {
     <MESSAGE_DATA: (~["\n", "\r", "'", "/"])+> {checkMessage();}
