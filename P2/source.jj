@@ -1,8 +1,7 @@
-
 options {
     BUILD_TOKEN_MANAGER=true;
     COMMON_TOKEN_ACTION=false;
-//    DEBUG_TOKEN_MANAGER=true;
+    DEBUG_TOKEN_MANAGER=true;
 }
 
 PARSER_BEGIN(SequenceDiagram)
@@ -59,11 +58,11 @@ TOKEN_MGR_DECLS:
     }
 }
 
-TOKEN : {
+<*>TOKEN : {
     // Para tratar cadenas como "una /* cadena */ que no es //comentario"
     //  < BCAD: "\"" > : CAD
     <COM_LINE_START: "//" > : COM_LINE
-    | <COM_MULTI_START: "/*" > : COM_MULTI
+    | <COM_MULTI_START: "/'" > : COM_MULTI
     | <DIAGRAM_START: "@startuml"> : DIAGRAM
     //| <STRING: "'"(~[]|"\\"~[])"'" >
 }
@@ -73,20 +72,20 @@ TOKEN : { // Definitions
     | <#ALPHA: ["a"-"z", "A"-"Z"]>
     | <#NUM: ["0"-"9"]>
     | <#ORIGIN_START: "Alumno">
+    | <#GROUP_START: "if">
 }
 
 <DIAGRAM>TOKEN : {
     <DIAGRAM_END: "@enduml"> : DEFAULT
-    | <GROUP_START> : GROUP
-    | <ORIGIN_START> : ORIGIN
-    | <#GROUP_START: "XxxX">
+    | <DIAGRAM_GROUP:<GROUP_START>> : GROUP
+    | <DIAGRAM_ORIGIN:<ORIGIN_START>> : ORIGIN
 }
 <DIAGRAM>SKIP : {
   " " | "\t" | "\n" | "\r" | <~[]>
 }
 
 <GROUP>TOKEN : {
-    <GROUP_END:"XDDD"> : DIAGRAM
+    <GROUP_END:"----"> : DIAGRAM
 }
 <GROUP>SKIP : {
   " " | "\t" | "\n" | "\r" | <~[]>
@@ -118,12 +117,12 @@ TOKEN : { // Definitions
 }
 
 <COM_MULTI>TOKEN : {
-    <COM_MULTI_END: "*/"> : DEFAULT
+    <COM_MULTI_END: "'/"> : DEFAULT
     | <COM_MULTI_OTHER: ~[]>
-    | <COM_MULTI_LONGEST: (~["*","/"])+>
+    | <COM_MULTI_LONGEST: (~["'","/"])+>
 }
 
 
 SKIP : {
-  " " | "\t" | <EOL> | "\r" | <~[]>
+  " " | "\t" | "\r" | <~[]>
 }
