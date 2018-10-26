@@ -1,0 +1,12 @@
+myVar=0;           # myVar := 0
+a    =5;           # a := 5
+while a-myVar do   # while (a - myVar) myVar += 2
+  myVar += 1 + 1
+end;
+until a+b do a-=1  # until (a + b) a := a - 1
+end;
+if a * b           # if (a * b) a := a * myVar
+then
+  a *= myVar
+end;
+print a            # print(a)

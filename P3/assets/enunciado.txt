@@ -1,0 +1,221 @@
+Se trata de utilizar JavaCC para obtener un compilador que traduzca un 
+lenguaje de alto nivel a código de máquina de pila abstracta. Básicamente
+lo mismo que hace el analizador recursivo descendente en C explicado en clase.
+
+El lenguaje de alto nivel es muy sencillo. No tiene declaración de tipos.
+El único tipo que permite es el tipo entero. En las condiciones de las
+instrucciones if, unless, until y while, el valor 0 se interpreta como falso y
+cualquier otro valor como cierto.
+Los nombres de las variables sólo pueden contener números, letras mayúsculas o 
+minúsculas, y guiones bajos; pero no pueden comenzar por número.
+
+Los comentarios en el lenguaje serán de dos tipos:
+ - en línea: comenzando por '#' hasta el fin de línea.
+ - multilínea: comenzando por '=begin' y finalizando con '=end'.
+
+
+La gramática del lenguaje es la siguiente:
+
+program -> stmt
+        |  stmt ';' program
+
+   stmt -> primary
+        |  VAR ('=' | '+=' | '-=' | '/=' | '*=')  expr
+
+primary -> 'if' expr 'then' program 
+           ('elsif' expr 'then' program)* 
+           ('else' program)? 'end'
+        |  'unless' expr 'then' program ('else' program)?
+        |  'until'  expr 'do' program 'end'
+        |  'while'  expr 'do' program 'end'
+        |  'print'  expr
+
+   expr -> expr '+' mexpr
+        |  expr '-' mexpr
+        |  mexpr
+
+  mexpr -> mexpr'*' value
+        |  mexpr'/' value
+        |  value
+
+  value -> NUM | VAR | '(' expr')'
+
+NOTAS: Se debe reescribir la gramática: eliminar la recursividad, factorizar...
+       antes de empezar a programar en JavaCC (en caso de que sea necesario).
+       No se permite utilizar el LOOKAHEAD de JavaCC.
+       NUM representa un número entero y VAR un identificador/variable del
+       lenguaje. El resto de comandos entre comillas simples representan 
+       palabras o símbolos reservados del lenguaje.
+
+Palabras reservadas: Todas las siguientes palabras son reservadas del lenguaje y,
+       por lo tanto, no deben poderse utilizar como identificadores:
+       class    ensure   nil     self     while
+       alias    defined  for     or       then
+       elsif    do       else    begin    unless
+       until    end      return  next     if
+
+
+Ante una entrada como:
+
+myVar=0;           # myVar := 0
+a    =5;           # a := 5
+while a-myVar do   # while (a - myVar) myVar += 2
+  myVar += 1 + 1
+end;
+until a+b do a-=1  # until (a + b) a := a - 1
+end;
+if a * b           # if (a * b) a := a * myVar
+then
+  a *= myVar
+end;
+print a            # print(a)
+
+Debería generar la secuencia (salvo quizás el nombre concreto de las 
+etiquetas o variables auxiliares):
+
+	valori myVar
+	mete 0
+	asigna
+	valori a
+	mete 5
+	asigna
+LBL0
+	valord a
+	valord myVar
+	sub
+	sifalsovea LBL1
+	valori myVar
+	mete 1
+	mete 1
+	sum
+	valord myVar
+	sum
+	asigna
+	vea LBL0
+LBL1
+LBL2
+	valord a
+	valord b
+	sum
+	siciertovea LBL3
+	valori a
+	mete 1
+	valord a
+	sub
+	asigna
+	vea LBL2
+LBL3
+	valord a
+	valord b
+	mul
+	sifalsovea LBL4
+	valori a
+	valord myVar
+	valord a
+	mul
+	asigna
+LBL4
+	valord a
+	print
+
+
+Ante una entrada como:
+
+=begin
+Ejemplo más completo, dispone de:
+  - Elementos anidados.
+  - Condicional con diversos elsif.
+=end
+var1 = 5*5 * (3-other);
+var2 = 0 + 0;
+while var1-var2
+do
+  var1 -= 2 ;
+  var2 += 2 ;
+  if var1/2
+  then var2=0 end
+end
+;
+
+if a-1 then
+  c = a + b
+elsif a-2 then
+  c = a - b
+else
+  c = 0
+end
+;
+
+print (c)
+# Fin del programa
+
+Debería generar la secuencia (salvo quizás el nombre concreto de las 
+etiquetas o variables auxiliares):
+	valori var1
+	mete 5
+	mete 5
+	mul
+	mete 3
+	valord other
+	sub
+	mul
+	asigna
+	valori var2
+	mete 0
+	mete 0
+	sum
+	asigna
+LBL0
+	valord var1
+	valord var2
+	sub
+	sifalsovea LBL1
+	valori var1
+	mete 2
+	valord var1
+	sub
+	asigna
+	valori var2
+	mete 2
+	valord var2
+	sum
+	asigna
+	valord var1
+	mete 2
+	div
+	sifalsovea LBL2
+	valori var2
+	mete 0
+	asigna
+LBL2
+	vea LBL0
+LBL1
+	valord a
+	mete 1
+	sub
+	sifalsovea LBL3
+	valori c
+	valord a
+	valord b
+	sum
+	asigna
+	vea LBL4
+LBL3
+	valord a
+	mete 2
+	sub
+	sifalsovea LBL5
+	valori c
+	valord a
+	valord b
+	sub
+	asigna
+	vea LBL6
+LBL5
+	valori c
+	mete 0
+	asigna
+LBL6
+LBL4
+	valord c
+	print
