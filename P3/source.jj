@@ -1,5 +1,5 @@
 options {
-    BUILD_TOKEN_MANAGER=true;
+    BUILD_TOKEN_MANAGER=false;
     DEBUG_TOKEN_MANAGER=false;
 }
 
@@ -7,25 +7,24 @@ PARSER_BEGIN(Compiler)
 
 public class Compiler {
     public static void main(String args[]) throws java.io.FileNotFoundException {
-        final CompilerTokenManager tokenManager = initTokenManager(args);
+        final Compiler compiler = initCompiler(args);
 
         try {
-            while (tokenManager.getNextToken().kind != EOF); // Process All tokens.
-            System.out.println("Finished");
+            compiler.parse();
         } catch (TokenMgrError ex) {
             System.out.println("Token Manager caught an unexpected exception, exiting...");
             throw ex;
         }
     }
 
-    static CompilerTokenManager initTokenManager(String args[]) throws java.io.FileNotFoundException {
+    static Compiler initCompiler(String args[]) throws java.io.FileNotFoundException {
         final SimpleCharStream charStream;
         if (args.length < 1) {
             charStream = new SimpleCharStream(System.in);
         } else {
             charStream = new SimpleCharStream(new java.io.FileInputStream(args[0]),0,0);
         }
-        return new CompilerTokenManager(charStream);
+        return new Compiler(charStream);
     }
 }
 PARSER_END(Compiler)
@@ -35,7 +34,54 @@ TOKEN_MGR_DECLS : {}
 /* ALL */
 <*>TOKEN : {
     <"\n">
+|   <#NUMBER: [0-9]+>
+|   <#ALPHA: ["a"-"z", "A"-"Z"]>
+|   <#VARIABLE: (<ALPHA>|"_")([<ALPHA>|<NUMBER>|"_"])*>
+|   <#ASSIGMENT: '=' | '+=' | '-=' | '/=' | '*='>
 }
 <*>SKIP : {
     <~[]>
+}
+
+void parse() : {} {
+    (block())*
+    <EOF>
+}
+
+void block() : {} {
+    line()
+|   line() ";" block()
+}
+
+void line() : {} {
+    primmary()
+    | <VARIABLE> <ASSIGMENT> expression()
+}
+
+void primmary() : {} {
+    "if" expression() "then" block()
+    ("elsif" expression() "then" block())*
+    ("else" block()) "end"
+|   "unless" expression() "then" block() ("else" block())?
+|   "until" expression() "do" block() "end"
+|   "while" expression() "do" block() "end"
+|   "print" expression()
+}
+
+void expression() : {} {
+    expression() '+' expressionMul()
+|   expression() '-' expressionMul()
+|   expressionMul()
+}
+
+void expressionMul() : {} {
+    expressionMul() '*' value()
+|   expressionMul() '/' value()
+|   value() // value == value * 1 == value / 1 
+}
+
+void value() : {} {
+    <VALUE_NUMBER: <NUMBER>>
+|   <VALUE_VARIABLE: <VARIABLE>>
+|   <VALUE_EXPRESSION: "(" expression() ")">
 }
