@@ -1,0 +1,20 @@
+PROGRAM -> STMT PROG2
+PROGRAM2 -> "" | ";" PROGRAM
+STMT -> PRIMARY | VAR EQ EXPR
+PRIMARY -> "if" EXPR "then" PROGRAM 
+           ("elsif" EXPR "then" PROGRAM)* 
+           ("else" PROGRAM)? "end"
+        |  "unless" EXPR "then" PROGRAM ("else" PROGRAM)? "end"
+        |  "until"  EXPR "do" PROGRAM "end"
+        |  "while"  EXPR "do" PROGRAM "end"
+        |  "print"  EXPR
+EXPR -> MEXPR EXPR2
+EXPR2 -> ["+", "-"] MEXPR EXPR2 | ""
+MEXPR -> VALUE MEXPR2
+MEXPR2 -> ["*", "/"] VALUE MEXPR2 | ""
+VALUE -> NUM | VAR | "(" EXPR ")"
+
+EQ -> ("=" | "+=" | "-=" | "/=" | "*=")
+NUM -> [0-9]+
+VAR -> [ALPHA, "_"]([ALPHA, [0-9], "_"])*
+ALPHA -> ["a"-"z", "A"-"Z"]
