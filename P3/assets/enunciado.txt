@@ -25,7 +25,7 @@ program -> stmt
 primary -> 'if' expr 'then' program 
            ('elsif' expr 'then' program)* 
            ('else' program)? 'end'
-        |  'unless' expr 'then' program ('else' program)?
+        |  'unless' expr 'then' program ('else' program)? 'end'
         |  'until'  expr 'do' program 'end'
         |  'while'  expr 'do' program 'end'
         |  'print'  expr
@@ -53,6 +53,7 @@ Palabras reservadas: Todas las siguientes palabras son reservadas del lenguaje y
        alias    defined  for     or       then
        elsif    do       else    begin    unless
        until    end      return  next     if
+       print
 
 
 Ante una entrada como:

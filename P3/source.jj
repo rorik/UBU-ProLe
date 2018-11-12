@@ -62,7 +62,7 @@ void primmary() : {} {
     "if" expression() "then" block()
     ("elsif" expression() "then" block())*
     ("else" block()) "end"
-|   "unless" expression() "then" block() ("else" block())?
+|   "unless" expression() "then" block() ("else" block())? "end"
 |   "until" expression() "do" block() "end"
 |   "while" expression() "do" block() "end"
 |   "print" expression()
