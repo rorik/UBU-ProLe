@@ -1,13 +1,15 @@
 options {
     BUILD_TOKEN_MANAGER=false;
-    DEBUG_TOKEN_MANAGER=false;
 }
 
 PARSER_BEGIN(Compiler)
 
+import java.util.Stack;
+
 public class Compiler {
     public static void main(String args[]) throws java.io.FileNotFoundException {
         final Compiler compiler = initCompiler(args);
+        final Stack<String> stack = new Stack<String>();
 
         try {
             compiler.program();
@@ -50,7 +52,7 @@ void program2(): {} {
     ";" program()
 }
 
-void statement() : {} {
+void statement() : { } {
     primmary()
     | <VARIABLE_STATEMENT: <VARIABLE>> assigment() expression()
 }
