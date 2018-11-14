@@ -10,7 +10,7 @@ public class Compiler {
         final Compiler compiler = initCompiler(args);
 
         try {
-            compiler.parse();
+            compiler.program();
         } catch (TokenMgrError ex) {
             System.out.println("Token Manager caught an unexpected exception, exiting...");
             throw ex;
@@ -31,57 +31,62 @@ PARSER_END(Compiler)
 
 TOKEN_MGR_DECLS : {}
 
-/* ALL */
-<*>TOKEN : {
+TOKEN : {
     <"\n">
-|   <#NUMBER: [0-9]+>
+|   <#NUMBER: (["0"-"9"])+>
 |   <#ALPHA: ["a"-"z", "A"-"Z"]>
-|   <#VARIABLE: (<ALPHA>|"_")([<ALPHA>|<NUMBER>|"_"])*>
-|   <#ASSIGMENT: '=' | '+=' | '-=' | '/=' | '*='>
+|   <#VARIABLE: (<ALPHA> | "_") (<ALPHA> | <NUMBER> | "_")*>
+|   <#ASSIGMENT: "=" | "+=" | "-=" | "/=" | "*=">
 }
-<*>SKIP : {
+SKIP : {
     <~[]>
 }
 
-void parse() : {} {
-    (block())*
-    <EOF>
+void program() : {} {
+    statement() (program2())?
 }
 
-void block() : {} {
-    line()
-|   line() ";" block()
+void program2(): {} {
+    ";" program()
 }
 
-void line() : {} {
+void statement() : {} {
     primmary()
-    | <VARIABLE> <ASSIGMENT> expression()
+    | <VARIABLE_STATEMENT: <VARIABLE>> assigment() expression()
+}
+
+void assigment() : {} {
+    <ASSIGMENT_ASSIGMENT: <ASSIGMENT>>
 }
 
 void primmary() : {} {
-    "if" expression() "then" block()
-    ("elsif" expression() "then" block())*
-    ("else" block()) "end"
-|   "unless" expression() "then" block() ("else" block())? "end"
-|   "until" expression() "do" block() "end"
-|   "while" expression() "do" block() "end"
+    "if" expression() "then" program()
+    ("elsif" expression() "then" program())*
+    ("else" program()) "end"
+|   "unless" expression() "then" program() ("else" program())? "end"
+|   "until" expression() "do" program() "end"
+|   "while" expression() "do" program() "end"
 |   "print" expression()
 }
 
 void expression() : {} {
-    expression() '+' expressionMul()
-|   expression() '-' expressionMul()
-|   expressionMul()
+    mexpression() (expression2())?
 }
 
-void expressionMul() : {} {
-    expressionMul() '*' value()
-|   expressionMul() '/' value()
-|   value() // value == value * 1 == value / 1 
+void expression2() : {} {
+    ("+" | "-") mexpression() expression2()
+}
+
+void mexpression() : {} {
+    value() mexpression2()
+}
+
+void mexpression2() : {} {
+    ("*" | "/") value() mexpression2()
 }
 
 void value() : {} {
     <VALUE_NUMBER: <NUMBER>>
 |   <VALUE_VARIABLE: <VARIABLE>>
-|   <VALUE_EXPRESSION: "(" expression() ")">
+|    "(" expression() ")"
 }
