@@ -36,9 +36,35 @@ TOKEN : {
 |   <#ALPHA: ["a"-"z", "A"-"Z"]>
 |   <#VARIABLE: (<ALPHA> | "_") (<ALPHA> | <NUMBER> | "_")*>
 |   <#ASSIGMENT: "=" | "+=" | "-=" | "/=" | "*=">
+|   <END: "end">
+|   <THEN: "then">
+|   <DO: "do">
+|   <ELSE: "else">
+|   <IF: "if">
+|   <ELIF: "elsif">
+|   <UNLESS: "unless">
+|   <UNTIL: "until">
+|   <WHILE: "while">
+|   <PRINT: "print">
+|   <EOL: ";">
+|   <ADDITION: "+">
+|   <SUBSTRACTION: "-">
+|   <MULTIPLICATION: "*">
+|   <DIVISION: "/">
+|   <PARENTHESIS_START: "(">
+|   <PARENTHESIS_END: ")">
+|   <RESERVED: "class" | "ensure" | "nil" | "self" | "while" | "alias" | "defined" | "for" | "or" | "then" | "elsif" | "do" | "else" | "begin" | "unless" | "until" | "end" | "return" | "next" | "if" | "print">
 }
 SKIP : {
     <~[]>
+    | <COM_LINE: "#"(~["\n"])*"\n">
+    | <COM_MULTI_START: "=begin" > : COM_MULTI
+}
+
+<COM_MULTI>TOKEN : { // MULTI-LINE COMMENT
+    <COM_MULTI_END: "=end"> : DEFAULT
+    | <COM_MULTI_OTHER: ~[]>
+    | <COM_MULTI_LONGEST: (~["="])+>
 }
 
 void program() : {} {
@@ -59,13 +85,47 @@ void assigment() : {} {
 }
 
 void primmary() : {} {
-    "if" expression() "then" program()
-    ("elsif" expression() "then" program())*
-    ("else" program()) "end"
-|   "unless" expression() "then" program() ("else" program())? "end"
-|   "until" expression() "do" program() "end"
-|   "while" expression() "do" program() "end"
-|   "print" expression()
+    primmaryIf() (primmaryElseIf())* (primmaryElse())? <END>
+|   primmaryUnless() (primmaryElse())? <END>
+|   primmaryUntil() <END>
+|   primmaryWhile() <END>
+|   primmaryPrint()
+}
+
+void primmaryThen() : {} {
+    <THEN> program()
+}
+
+void primmaryDo() : {
+    <DO> program()
+}
+
+void primmaryElse() : {} {
+    <ELSE> program()
+}
+
+void primmaryIf() : {} {
+    <IF> expression() primmaryThen()
+}
+
+void primmaryElseIf() : {} {
+    <ELIF> expression() primmaryThen()
+}
+
+void primmaryUnless() : {} {
+    <UNLESS> expression() primmaryThen()
+}
+
+void primmaryUntil() : {} {
+    <UNTIL> expression() primmaryDo()
+}
+
+void primmaryWhile() : {} {
+    <WHILE> expression() primmaryDo()
+}
+
+void primmaryPrint() : {} {
+    <PRINT> expression()
 }
 
 void expression() : {} {
@@ -73,7 +133,7 @@ void expression() : {} {
 }
 
 void expression2() : {} {
-    ("+" | "-") mexpression() expression2()
+    (<ADDITION> | <SUBSTRACTION>) mexpression() expression2()
 }
 
 void mexpression() : {} {
@@ -81,11 +141,11 @@ void mexpression() : {} {
 }
 
 void mexpression2() : {} {
-    ("*" | "/") value() mexpression2()
+    (<MULTIPLICATION> | <DIVISION>) value() mexpression2()
 }
 
 void value() : {} {
     <VALUE_NUMBER: <NUMBER>>
 |   <VALUE_VARIABLE: <VARIABLE>>
-|    "(" expression() ")"
+|   <PARENTHESIS_START> expression() <PARENTHESIS_END>
 }
