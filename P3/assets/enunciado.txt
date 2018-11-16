@@ -100,8 +100,8 @@ LBL2
 	sum
 	siciertovea LBL3
 	valori a
-	mete 1
 	valord a
+	mete 1
 	sub
 	asigna
 	vea LBL2
