@@ -1,5 +1,5 @@
 options {
-    BUILD_TOKEN_MANAGER=false;
+    STATIC=false;
 }
 
 PARSER_BEGIN(Compiler)
@@ -13,20 +13,17 @@ public class Compiler {
 
         try {
             compiler.program();
-        } catch (TokenMgrError ex) {
-            System.out.println("Token Manager caught an unexpected exception, exiting...");
-            throw ex;
+        } catch (ParseException ex) {
+            System.out.println("Parser caught an unexpected exception, exiting...");
+            return;
         }
     }
 
     static Compiler initCompiler(String args[]) throws java.io.FileNotFoundException {
-        final SimpleCharStream charStream;
         if (args.length < 1) {
-            charStream = new SimpleCharStream(System.in);
-        } else {
-            charStream = new SimpleCharStream(new java.io.FileInputStream(args[0]),0,0);
+            return new Compiler(System.in);
         }
-        return new Compiler(charStream);
+        return new Compiler(new java.io.FileInputStream(args[0]));
     }
 }
 PARSER_END(Compiler)
