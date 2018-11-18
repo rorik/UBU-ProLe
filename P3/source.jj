@@ -22,11 +22,9 @@ public class Compiler {
             compiler.program();
         } catch (java.io.FileNotFoundException ex) {
             System.out.println("File not found (" + args[0] + "), first argument must be a valid path.");
-            return;
         } catch (ParseException ex) {
             System.out.println(ex);
             System.out.println("Parser caught an unexpected exception, exiting...");
-            return;
         }
     }
 
