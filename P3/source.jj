@@ -114,7 +114,11 @@ void statementAssignment() : {
     boolean eq, eq2;
 } {
     leftValue = <VARIABLE> {System.out.println("\tvalori " + leftValue.image);}
-    operation = assignment(leftValue)
+    operation = assignment() {
+        if (operation != null) {
+            System.out.println("\tvalord " + leftValue.image);
+        }
+    }
     expression() {
         if (operation != null) {
             System.out.println('\t' + operation);
@@ -123,24 +127,12 @@ void statementAssignment() : {
     }
 }
 
-String assignment(Token leftValue) : {} {
+String assignment() : {} {
     <EQUALS> { return null; }
-|   <ADDITION_EQUALS> {
-        System.out.println("\tvalord " + leftValue.image);
-        return "sum";
-    }
-|   <SUBSTRACTION_EQUALS> {
-        System.out.println("\tvalord " + leftValue.image);
-        return "sub";
-    }
-|   <MULTIPLICATION_EQUALS> {
-        System.out.println("\tvalord " + leftValue.image);
-        return "mul";
-    }
-|   <DIVISION_EQUALS> { 
-        System.out.println("\tvalord" + leftValue.image);
-        return "div";
-    }
+|   <ADDITION_EQUALS> { return "sum"; }
+|   <SUBSTRACTION_EQUALS> { return "sub"; }
+|   <MULTIPLICATION_EQUALS> { return "mul"; }
+|   <DIVISION_EQUALS> { return "div"; }
 }
 
 void primmary() : {} {
