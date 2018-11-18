@@ -1,5 +1,6 @@
 options {
     STATIC=false;
+	DEBUG_PARSER=false;
 }
 
 PARSER_BEGIN(Compiler)
@@ -14,6 +15,7 @@ public class Compiler {
         try {
             compiler.program();
         } catch (ParseException ex) {
+            System.out.println(ex);
             System.out.println("Parser caught an unexpected exception, exiting...");
             return;
         }
@@ -25,17 +27,18 @@ public class Compiler {
         }
         return new Compiler(new java.io.FileInputStream(args[0]));
     }
+
+    public static int labelCount = 0;
+    
+    public static int getNewLabel() {
+        return Compiler.labelCount++;
+    }
 }
 PARSER_END(Compiler)
 
-TOKEN_MGR_DECLS : {}
-
 TOKEN : {
-    <"\n">
-|   <#NUMBER: (["0"-"9"])+>
+    <NUMBER: (["0"-"9"])+>
 |   <#ALPHA: ["a"-"z", "A"-"Z"]>
-|   <#VARIABLE: (<ALPHA> | "_") (<ALPHA> | <NUMBER> | "_")*>
-|   <#ASSIGMENT: "=" | "+=" | "-=" | "/=" | "*=">
 |   <END: "end">
 |   <THEN: "then">
 |   <DO: "do">
@@ -47,48 +50,67 @@ TOKEN : {
 |   <WHILE: "while">
 |   <PRINT: "print">
 |   <EOL: ";">
+|   <EQUALS: "=">
 |   <ADDITION: "+">
+|   <ADDITION_EQUALS: "+=">
 |   <SUBSTRACTION: "-">
+|   <SUBSTRACTION_EQUALS: "-=">
 |   <MULTIPLICATION: "*">
+|   <MULTIPLICATION_EQUALS: "*=">
 |   <DIVISION: "/">
+|   <DIVISION_EQUALS: "/=">
 |   <PARENTHESIS_START: "(">
 |   <PARENTHESIS_END: ")">
 |   <RESERVED: "class" | "ensure" | "nil" | "self" | "while" | "alias" | "defined" | "for" | "or" | "then" | "elsif" | "do" | "else" | "begin" | "unless" | "until" | "end" | "return" | "next" | "if" | "print">
+|   <VARIABLE: (<ALPHA> | "_") (<ALPHA> | <NUMBER> | "_")*>
 }
-SKIP : {
-    <~[]>
-    | <COM_LINE: "#"(~["\n"])*"\n">
-    | <COM_MULTI_START: "=begin" > : COM_MULTI
+<*>SKIP : {
+    <WHITESPACE: "\n" | "\r" | "\t" | " ">
+|   <COM_LINE: "#" (~["\n", "\r"])*>
+|   <COM_MULTI_START: "=begin" > : COM_MULTI
 }
 
-<COM_MULTI>TOKEN : { // MULTI-LINE COMMENT
+<COM_MULTI>SKIP : {
     <COM_MULTI_END: "=end"> : DEFAULT
-    | <COM_MULTI_OTHER: ~[]>
-    | <COM_MULTI_LONGEST: (~["="])+>
+|   <COM_MULTI_LONGEST: (~["="])+>
+|   <COM_MULTI_OTHER: ~[]>
 }
+
 
 void program() : {} {
-    statement() (program2())?
+    statement() (";" program())?
 }
 
-void program2(): {} {
-    ";" program()
+void statement() : {} {
+    primmary() | statementAssigment()
 }
 
-void statement() : { } {
-    primmary()
-    | <VARIABLE_STATEMENT: <VARIABLE>> assigment() expression()
+void statementAssigment() : {
+    Token leftValue, rightValue;
+    String[] assigment;
+    boolean eq, eq2;
+} {
+    leftValue = <VARIABLE> {System.out.println("\tvalori " + leftValue.image);}
+    assigment = assigment(leftValue)
+    expression()
+    {for (String line : assigment) {
+        System.out.println('\t' + line);
+    }}
 }
 
-void assigment() : {} {
-    <ASSIGMENT_ASSIGMENT: <ASSIGMENT>>
+String[] assigment(Token leftValue) : {} {
+    (<EQUALS> { return new String[]{"asigna"}; })
+|   (<ADDITION_EQUALS> { return new String[]{"valord " + leftValue.image, "sum", "asigna"}; })
+|   (<SUBSTRACTION_EQUALS> { return new String[]{"valord " + leftValue.image, "sub", "asigna"}; })
+|   (<MULTIPLICATION_EQUALS> { return new String[]{"mete " + leftValue.image, "mul", "asigna"}; })
+|   (<DIVISION_EQUALS> { return new String[]{"mete " + leftValue.image, "div", "asigna"}; })
 }
 
 void primmary() : {} {
-    primmaryIf() (primmaryElseIf())* (primmaryElse())? <END>
-|   primmaryUnless() (primmaryElse())? <END>
-|   primmaryUntil() <END>
-|   primmaryWhile() <END>
+    primmaryIf()
+|   primmaryUnless()
+|   primmaryUntil()
+|   primmaryWhile()
 |   primmaryPrint()
 }
 
@@ -96,56 +118,136 @@ void primmaryThen() : {} {
     <THEN> program()
 }
 
-void primmaryDo() : {
-    <DO> program()
+int primmaryDo(boolean condition) : {
+    String conditionToString = condition ? "cierto" : "falso";
+    int label;
+} {
+    <DO> {
+        label = getNewLabel();
+        System.out.println("\tsi" + conditionToString + "vea LBL" + label);
+    }
+    program()
+    { return label; }
 }
 
-void primmaryElse() : {} {
-    <ELSE> program()
+void primmaryElse(int lastLabel) : {} {
+    <ELSE> {
+        System.out.println("\tvea LBL" + lastLabel);
+        System.out.println("LBL" + (lastLabel - 1));
+    }
+    program() { System.out.println("LBL" + getNewLabel()); }
 }
 
-void primmaryIf() : {} {
-    <IF> expression() primmaryThen()
+void primmaryIf() : {
+    int firstLabel, lastLabel;
+} {
+    <IF>
+    expression() {
+        lastLabel = firstLabel = getNewLabel();
+        System.out.println("\tsifalsovea LBL" + lastLabel);
+    }
+    primmaryThen()
+    (lastLabel = primmaryElseIf(lastLabel))*
+    (primmaryElse(lastLabel))?
+    <END> { System.out.println("LBL" + firstLabel); }
 }
 
-void primmaryElseIf() : {} {
-    <ELIF> expression() primmaryThen()
+int primmaryElseIf(int label) : {
+    int elseLabel;
+} {
+    <ELIF> {
+        elseLabel = getNewLabel();
+        System.out.println("\tvea LBL" + elseLabel);
+        System.out.println("LBL" + label);
+    }
+    expression() {
+        label = getNewLabel();
+        System.out.println("\tsifalsovea LBL" + label);
+    }
+    primmaryThen()
+    { return label; }
 }
 
-void primmaryUnless() : {} {
-    <UNLESS> expression() primmaryThen()
+void primmaryUnless() : {
+    int label;
+} {
+    <UNLESS>
+    expression() {
+        label = getNewLabel();
+        System.out.println("\tsiciertovea LBL" + label);
+    }
+    primmaryThen()
+    (primmaryElse(label))?
+    <END> { System.out.println("LBL" + label); }
 }
 
-void primmaryUntil() : {} {
-    <UNTIL> expression() primmaryDo()
+void primmaryUntil() : {
+    int firstLabel, lastLabel;
+} {
+    <UNTIL> {
+        firstLabel = getNewLabel();
+        System.out.println("LBL" + firstLabel);
+    }
+    expression()
+    lastLabel = primmaryDo(true)
+    <END> {
+        System.out.println("\tvea LBL" + firstLabel);
+        System.out.println("LBL" + lastLabel);
+    }
 }
 
-void primmaryWhile() : {} {
-    <WHILE> expression() primmaryDo()
+void primmaryWhile() : {
+    int firstLabel, lastLabel;
+} {
+    <WHILE> {
+        firstLabel = getNewLabel();
+        System.out.println("LBL" + firstLabel);
+    }
+    expression()
+    lastLabel = primmaryDo(false)
+    <END> {
+        System.out.println("\tvea LBL" + firstLabel);
+        System.out.println("LBL" + lastLabel);
+    }
 }
 
 void primmaryPrint() : {} {
-    <PRINT> expression()
+    <PRINT>
+    expression()  { System.out.println("\tprint"); }
 }
 
 void expression() : {} {
     mexpression() (expression2())?
 }
 
-void expression2() : {} {
-    (<ADDITION> | <SUBSTRACTION>) mexpression() expression2()
+void expression2() : {
+    String operation;
+} {
+    (
+        <ADDITION> { operation = "sum"; }
+    |   <SUBSTRACTION> { operation = "sub"; }
+    )
+    expression() { System.out.println('\t' + operation); }
 }
 
 void mexpression() : {} {
-    value() mexpression2()
+    value() (mexpression2())?
 }
 
-void mexpression2() : {} {
-    (<MULTIPLICATION> | <DIVISION>) value() mexpression2()
+void mexpression2() : {
+    String operation;
+} {
+    (
+        <MULTIPLICATION> { operation = "mul"; }
+    |   <DIVISION> { operation = "div"; }
+    )
+    mexpression() { System.out.println('\t' + operation); }
 }
 
-void value() : {} {
-    <VALUE_NUMBER: <NUMBER>>
-|   <VALUE_VARIABLE: <VARIABLE>>
+void value() : {
+    Token value;
+} {
+    value = <NUMBER> { System.out.println("\tmete " + value.image); }
+|   value = <VARIABLE> { System.out.println("\tvalord " + value.image); }
 |   <PARENTHESIS_START> expression() <PARENTHESIS_END>
 }
