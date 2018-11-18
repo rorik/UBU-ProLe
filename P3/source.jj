@@ -5,13 +5,19 @@ options {
 
 PARSER_BEGIN(Compiler)
 
-import java.util.Stack;
-
+/**
+ * Language parser class.
+ *
+ * @author <a href="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz García</a>
+ */
 public class Compiler {
+    /**
+     * Main method. Parses either stdin or a file.
+     *
+     * @param args if empty, the parser will parse stdin. Otherwise, it will parse the file in the first argument. 
+     */
     public static void main(String args[]) throws java.io.FileNotFoundException {
         final Compiler compiler = initCompiler(args);
-        final Stack<String> stack = new Stack<String>();
-
         try {
             compiler.program();
         } catch (ParseException ex) {
@@ -21,6 +27,12 @@ public class Compiler {
         }
     }
 
+    /**
+     * Creates the compiler according to the given arguments.
+     *
+     * @param args if empty, the parser will parse stdin. Otherwise, it will parse the file in the first argument.
+     * @return a Compiler instance.
+     */
     static Compiler initCompiler(String args[]) throws java.io.FileNotFoundException {
         if (args.length < 1) {
             return new Compiler(System.in);
@@ -28,12 +40,21 @@ public class Compiler {
         return new Compiler(new java.io.FileInputStream(args[0]));
     }
 
+    /**
+     * The current label.
+     */
     public static int labelCount = 0;
     
+    /**
+     * Get the next label.
+     *
+     * @return the latest label.
+     */
     public static int getNewLabel() {
         return Compiler.labelCount++;
     }
 }
+
 PARSER_END(Compiler)
 
 TOKEN : {
@@ -64,6 +85,7 @@ TOKEN : {
 |   <RESERVED: "class" | "ensure" | "nil" | "self" | "while" | "alias" | "defined" | "for" | "or" | "then" | "elsif" | "do" | "else" | "begin" | "unless" | "until" | "end" | "return" | "next" | "if" | "print">
 |   <VARIABLE: (<ALPHA> | "_") (<ALPHA> | <NUMBER> | "_")*>
 }
+
 <*>SKIP : {
     <WHITESPACE: "\n" | "\r" | "\t" | " ">
 |   <COM_LINE: "#" (~["\n", "\r"])*>
@@ -99,11 +121,11 @@ void statementAssigment() : {
 }
 
 String[] assigment(Token leftValue) : {} {
-    (<EQUALS> { return new String[]{"asigna"}; })
-|   (<ADDITION_EQUALS> { return new String[]{"valord " + leftValue.image, "sum", "asigna"}; })
-|   (<SUBSTRACTION_EQUALS> { return new String[]{"valord " + leftValue.image, "sub", "asigna"}; })
-|   (<MULTIPLICATION_EQUALS> { return new String[]{"mete " + leftValue.image, "mul", "asigna"}; })
-|   (<DIVISION_EQUALS> { return new String[]{"mete " + leftValue.image, "div", "asigna"}; })
+    <EQUALS> { return new String[]{"asigna"}; }
+|   <ADDITION_EQUALS> { return new String[]{"valord " + leftValue.image, "sum", "asigna"}; }
+|   <SUBSTRACTION_EQUALS> { return new String[]{"valord " + leftValue.image, "sub", "asigna"}; }
+|   <MULTIPLICATION_EQUALS> { return new String[]{"mete " + leftValue.image, "mul", "asigna"}; }
+|   <DIVISION_EQUALS> { return new String[]{"mete " + leftValue.image, "div", "asigna"}; }
 }
 
 void primmary() : {} {
