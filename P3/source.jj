@@ -16,10 +16,13 @@ public class Compiler {
      *
      * @param args if empty, the parser will parse stdin. Otherwise, it will parse the file in the first argument. 
      */
-    public static void main(String args[]) throws java.io.FileNotFoundException {
-        final Compiler compiler = initCompiler(args);
+    public static void main(String args[]) {
         try {
+            final Compiler compiler = initCompiler(args);
             compiler.program();
+        } catch (java.io.FileNotFoundException ex) {
+            System.out.println("File not found (" + args[0] + "), first argument must be a valid path.");
+            return;
         } catch (ParseException ex) {
             System.out.println(ex);
             System.out.println("Parser caught an unexpected exception, exiting...");
