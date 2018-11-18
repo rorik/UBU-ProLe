@@ -53,7 +53,6 @@ Palabras reservadas: Todas las siguientes palabras son reservadas del lenguaje y
        alias    defined  for     or       then
        elsif    do       else    begin    unless
        until    end      return  next     if
-       print
 
 
 Ante una entrada como:
@@ -86,10 +85,10 @@ LBL0
 	sub
 	sifalsovea LBL1
 	valori myVar
+	valord myVar
 	mete 1
 	mete 1
 	sum
-	valord myVar
 	sum
 	asigna
 	vea LBL0
@@ -111,8 +110,8 @@ LBL3
 	mul
 	sifalsovea LBL4
 	valori a
-	valord myVar
 	valord a
+	valord myVar
 	mul
 	asigna
 LBL4
@@ -172,13 +171,13 @@ LBL0
 	sub
 	sifalsovea LBL1
 	valori var1
-	mete 2
 	valord var1
+	mete 2
 	sub
 	asigna
 	valori var2
-	mete 2
 	valord var2
+	mete 2
 	sum
 	asigna
 	valord var1

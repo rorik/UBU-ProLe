@@ -126,18 +126,16 @@ void statementAssigment() : {
 String assigment(Token leftValue) : {} {
     <EQUALS> { return null; }
 |   <ADDITION_EQUALS> {
-        //System.out.println("\tvalord " + leftValue.image);
-        //return "sum";
-        return "valord " + leftValue.image + "\n\tsum";
+        System.out.println("\tvalord " + leftValue.image);
+        return "sum";
     }
 |   <SUBSTRACTION_EQUALS> {
         System.out.println("\tvalord " + leftValue.image);
         return "sub";
     }
 |   <MULTIPLICATION_EQUALS> {
-        //System.out.println("\tvalord " + leftValue.image);
-        //return "mul";
-        return "valord " + leftValue.image + "\n\tmul";
+        System.out.println("\tvalord " + leftValue.image);
+        return "mul";
     }
 |   <DIVISION_EQUALS> { 
         System.out.println("\tvalord" + leftValue.image);
