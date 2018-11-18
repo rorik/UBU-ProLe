@@ -176,16 +176,16 @@ void primmaryIf() : {
         System.out.println("\tsifalsovea LBL" + lastLabel);
     }
     primmaryThen()
-    (lastLabel = primmaryElseIf(lastLabel))*
-    (primmaryElse(lastLabel))?
+    (lastLabel = primmaryElseIf(firstLabel))*
+    (primmaryElse(lastLabel + 1))?
     <END> { System.out.println("LBL" + firstLabel); }
 }
 
-int primmaryElseIf(int label) : {
-    int elseLabel;
+int primmaryElseIf(int elseLabel) : {
+    int label;
 } {
     <ELIF> {
-        elseLabel = getNewLabel();
+        label = getNewLabel();
         System.out.println("\tvea LBL" + elseLabel);
         System.out.println("LBL" + label);
     }
