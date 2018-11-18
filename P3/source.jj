@@ -105,16 +105,16 @@ void program() : {} {
 }
 
 void statement() : {} {
-    primmary() | statementAssigment()
+    primmary() | statementAssignment()
 }
 
-void statementAssigment() : {
+void statementAssignment() : {
     Token leftValue, rightValue;
     String operation;
     boolean eq, eq2;
 } {
     leftValue = <VARIABLE> {System.out.println("\tvalori " + leftValue.image);}
-    operation = assigment(leftValue)
+    operation = assignment(leftValue)
     expression() {
         if (operation != null) {
             System.out.println('\t' + operation);
@@ -123,7 +123,7 @@ void statementAssigment() : {
     }
 }
 
-String assigment(Token leftValue) : {} {
+String assignment(Token leftValue) : {} {
     <EQUALS> { return null; }
 |   <ADDITION_EQUALS> {
         System.out.println("\tvalord " + leftValue.image);
