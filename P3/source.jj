@@ -159,55 +159,67 @@ int primmaryDo(boolean condition) : {
     { return label; }
 }
 
-void primmaryElse(int lastLabel) : {} {
+void primmaryElse(int label, int endLabel) : {} {
     <ELSE> {
-        System.out.println("\tvea LBL" + lastLabel);
-        System.out.println("LBL" + (lastLabel - 1));
+        System.out.println("\tvea LBL" + endLabel);
+        System.out.println("LBL" + label);
     }
-    program() { System.out.println("LBL" + getNewLabel()); }
+    program()
 }
 
 void primmaryIf() : {
-    int firstLabel, lastLabel;
+    int nextLabel, endLabel;
 } {
     <IF>
     expression() {
-        lastLabel = firstLabel = getNewLabel();
-        System.out.println("\tsifalsovea LBL" + lastLabel);
+        nextLabel = getNewLabel();
+        endLabel = getNewLabel();
+        System.out.println("\tsifalsovea LBL" + nextLabel);
     }
     primmaryThen()
-    (lastLabel = primmaryElseIf(firstLabel))*
-    (primmaryElse(lastLabel + 1))?
-    <END> { System.out.println("LBL" + firstLabel); }
+    (nextLabel = primmaryElseIf(nextLabel, endLabel))*
+    (primmaryElse(nextLabel, endLabel) | { System.out.println("LBL" + nextLabel); } )
+    <END> { System.out.println("LBL" + endLabel); }
 }
 
-int primmaryElseIf(int elseLabel) : {
-    int label;
+int primmaryElseIf(int label, int endLabel) : {
+    int nextLabel;
 } {
     <ELIF> {
-        label = getNewLabel();
-        System.out.println("\tvea LBL" + elseLabel);
+        System.out.println("\tvea LBL" + endLabel);
         System.out.println("LBL" + label);
     }
     expression() {
-        label = getNewLabel();
-        System.out.println("\tsifalsovea LBL" + label);
+        nextLabel = getNewLabel();
+        System.out.println("\tsifalsovea LBL" + nextLabel);
     }
     primmaryThen()
-    { return label; }
+    { return nextLabel; }
 }
 
 void primmaryUnless() : {
-    int label;
+    int nextLabel;
 } {
     <UNLESS>
     expression() {
-        label = getNewLabel();
-        System.out.println("\tsiciertovea LBL" + label);
+        nextLabel = getNewLabel();
+        System.out.println("\tsiciertovea LBL" + nextLabel);
     }
     primmaryThen()
-    (primmaryElse(label))?
-    <END> { System.out.println("LBL" + label); }
+    (nextLabel = primmaryUnlessElse(nextLabel))?
+    <END> { System.out.println("LBL" + nextLabel); }
+}
+
+int primmaryUnlessElse(int label) : {
+    int nextLabel;
+} {
+    <ELSE> {
+        nextLabel = getNewLabel();
+        System.out.println("\tvea LBL" + nextLabel);
+        System.out.println("LBL" + label);
+    }
+    program()
+    { return nextLabel; }
 }
 
 void primmaryUntil() : {
