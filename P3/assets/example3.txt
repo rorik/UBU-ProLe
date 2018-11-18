@@ -1,0 +1,12 @@
+a=1;
+b = 2;
+
+unless a - b then
+    print 20
+else
+    print 30
+end;
+
+unless a - 1 then
+    print 40
+end

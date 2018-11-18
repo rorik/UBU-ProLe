@@ -1,0 +1,24 @@
+a=1;
+b = 2;
+
+if a - b then
+    print 20
+elsif a + b then
+    print 30
+elsif a * b then
+    print 40
+elsif a / b then
+    print 50
+else
+    print 60
+end;
+
+if a - 1 then
+    print 70
+end
+
+if a - 1 then
+    print 70
+else
+    print 80
+end
