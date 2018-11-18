@@ -109,23 +109,39 @@ void statement() : {} {
 
 void statementAssigment() : {
     Token leftValue, rightValue;
-    String[] assigment;
+    String operation;
     boolean eq, eq2;
 } {
     leftValue = <VARIABLE> {System.out.println("\tvalori " + leftValue.image);}
-    assigment = assigment(leftValue)
-    expression()
-    {for (String line : assigment) {
-        System.out.println('\t' + line);
-    }}
+    operation = assigment(leftValue)
+    expression() {
+        if (operation != null) {
+            System.out.println('\t' + operation);
+        }
+        System.out.println("\tasigna");
+    }
 }
 
-String[] assigment(Token leftValue) : {} {
-    <EQUALS> { return new String[]{"asigna"}; }
-|   <ADDITION_EQUALS> { return new String[]{"valord " + leftValue.image, "sum", "asigna"}; }
-|   <SUBSTRACTION_EQUALS> { return new String[]{"valord " + leftValue.image, "sub", "asigna"}; }
-|   <MULTIPLICATION_EQUALS> { return new String[]{"mete " + leftValue.image, "mul", "asigna"}; }
-|   <DIVISION_EQUALS> { return new String[]{"mete " + leftValue.image, "div", "asigna"}; }
+String assigment(Token leftValue) : {} {
+    <EQUALS> { return null; }
+|   <ADDITION_EQUALS> {
+        //System.out.println("\tvalord " + leftValue.image);
+        //return "sum";
+        return "valord " + leftValue.image + "\n\tsum";
+    }
+|   <SUBSTRACTION_EQUALS> {
+        System.out.println("\tvalord " + leftValue.image);
+        return "sub";
+    }
+|   <MULTIPLICATION_EQUALS> {
+        //System.out.println("\tvalord " + leftValue.image);
+        //return "mul";
+        return "valord " + leftValue.image + "\n\tmul";
+    }
+|   <DIVISION_EQUALS> { 
+        System.out.println("\tvalord" + leftValue.image);
+        return "div";
+    }
 }
 
 void primmary() : {} {
