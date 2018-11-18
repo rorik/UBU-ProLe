@@ -58,6 +58,9 @@ public class Compiler {
 
 PARSER_END(Compiler)
 
+/**
+ * The declarations of the tokens to be parsed by the parser.
+ */
 TOKEN : {
     <NUMBER: (["0"-"9"])+>
 |   <#ALPHA: ["a"-"z", "A"-"Z"]>
@@ -66,7 +69,7 @@ TOKEN : {
 |   <DO: "do">
 |   <ELSE: "else">
 |   <IF: "if">
-|   <ELIF: "elsif">
+|   <ELSIF: "elsif">
 |   <UNLESS: "unless">
 |   <UNTIL: "until">
 |   <WHILE: "while">
@@ -83,37 +86,57 @@ TOKEN : {
 |   <DIVISION_EQUALS: "/=">
 |   <PARENTHESIS_START: "(">
 |   <PARENTHESIS_END: ")">
-|   <RESERVED: "class" | "ensure" | "nil" | "self" | "while" | "alias" | "defined" | "for" | "or" | "then" | "elsif" | "do" | "else" | "begin" | "unless" | "until" | "end" | "return" | "next" | "if" | "print">
+|   <RESERVED: "class" | "ensure" | "nil" | "self" | "alias" | "defined" | "for" | "or" | "begin" | "return" | "next">
 |   <VARIABLE: (<ALPHA> | "_") (<ALPHA> | <NUMBER> | "_")*>
 }
 
+/**
+ * The tokens that can be ignored.
+ */
 <*>SKIP : {
     <WHITESPACE: "\n" | "\r" | "\t" | " ">
 |   <COM_LINE: "#" (~["\n", "\r"])*>
 |   <COM_MULTI_START: "=begin" > : COM_MULTI
 }
 
+/**
+ * The multiline comment.
+ */
 <COM_MULTI>SKIP : {
     <COM_MULTI_END: "=end"> : DEFAULT
 |   <COM_MULTI_LONGEST: (~["="])+>
 |   <COM_MULTI_OTHER: ~[]>
 }
 
-
+/**
+ * The program, each statement separated by semicolons.
+ */
 void program() : {} {
     statement() (";" program())?
 }
 
+/**
+ * Either a built-in function (`if`/`while`/`print`) or an assignment.
+ */
 void statement() : {} {
     primmary() | statementAssignment()
 }
 
+/**
+ * An assigment to a variable, in the following syntax:
+ * <VARIABLE> (`=`|`+=`|`-=`|`*=`|`/=`) expression()
+ */
 void statementAssignment() : {
-    Token leftValue, rightValue;
+    /**
+     * The name of the variable.
+     */
+    Token leftValue;
+    /**
+     * The type of operation if applicable (sum, sub, mul, or div).
+     */
     String operation;
-    boolean eq, eq2;
 } {
-    leftValue = <VARIABLE> {System.out.println("\tvalori " + leftValue.image);}
+    leftValue = <VARIABLE> { System.out.println("\tvalori " + leftValue.image); }
     operation = assignment() {
         if (operation != null) {
             System.out.println("\tvalord " + leftValue.image);
@@ -127,6 +150,11 @@ void statementAssignment() : {
     }
 }
 
+/**
+ * An assigment operator (`=`|`+=`|`-=`|`*=`|`/=`).
+ *
+ * @return a String with the corresponding operation (sum, sub, mul, or div).
+ */
 String assignment() : {} {
     <EQUALS> { return null; }
 |   <ADDITION_EQUALS> { return "sum"; }
@@ -135,6 +163,9 @@ String assignment() : {} {
 |   <DIVISION_EQUALS> { return "div"; }
 }
 
+/**
+ * One of the built-in functions (`if`, `unless`, `until`, `while`, or `print`).
+ */
 void primmary() : {} {
     primmaryIf()
 |   primmaryUnless()
@@ -143,32 +174,28 @@ void primmary() : {} {
 |   primmaryPrint()
 }
 
+/**
+ * A common syntax used in many functions.
+ * Syntax: <THEN> program()
+ */
 void primmaryThen() : {} {
     <THEN> program()
 }
 
-int primmaryDo(boolean condition) : {
-    String conditionToString = condition ? "cierto" : "falso";
-    int label;
-} {
-    <DO> {
-        label = getNewLabel();
-        System.out.println("\tsi" + conditionToString + "vea LBL" + label);
-    }
-    program()
-    { return label; }
-}
-
-void primmaryElse(int label, int endLabel) : {} {
-    <ELSE> {
-        System.out.println("\tvea LBL" + endLabel);
-        System.out.println("LBL" + label);
-    }
-    program()
-}
-
+/**
+ * The `if`/`elsif`/`else` block, with the following syntax:
+ * <IF> expression() primmaryThen() (primmaryElseIf)* primmaryElse()? <END>
+ */
 void primmaryIf() : {
-    int nextLabel, endLabel;
+    /**
+     * The next label address which this `elsif` jumps to if the condition is `false`,
+     * either an `elsif`, `else` or before the `end` if no `else` is present.
+     */
+    int nextLabel;
+    /**
+     * The label that comes after the `if` block is finished (`end`).
+     */
+    int endLabel;
 } {
     <IF>
     expression() {
@@ -182,10 +209,38 @@ void primmaryIf() : {
     <END> { System.out.println("LBL" + endLabel); }
 }
 
+/**
+ * The else statement inside an `if`/`elsif`/`else` block.
+ * Syntax: <ELSE> program()
+ *
+ * @param label the label of this `else`.
+ * @param endLabel the label that ends the `if` block and comes after this `else`.
+ */
+void primmaryElse(int label, int endLabel) : {} {
+    <ELSE> {
+        System.out.println("\tvea LBL" + endLabel);
+        System.out.println("LBL" + label);
+    }
+    program()
+}
+
+/**
+ * The `elseif` statement inside an `if`/`elsif`/`else` block.
+ * Syntax: <ELSIF> expression() primmaryThen()
+ *
+ * @param label the label of this `elsif`.
+ * @param endLabel the label that ends the `if` block.
+ *
+ * @return an int with the label with the following jump address,
+ *         either an `elsif`, `else` or before `end`.
+ */
 int primmaryElseIf(int label, int endLabel) : {
+    /**
+     * The next label address which this elsif jumps to if the condition is `false`.
+     */
     int nextLabel;
 } {
-    <ELIF> {
+    <ELSIF> {
         System.out.println("\tvea LBL" + endLabel);
         System.out.println("LBL" + label);
     }
@@ -197,7 +252,15 @@ int primmaryElseIf(int label, int endLabel) : {
     { return nextLabel; }
 }
 
+/**
+ * The `unless` function.
+ * Syntax: <UNLESS> expression() primmaryThen() primmaryUnlessElse()? <END>
+ */
 void primmaryUnless() : {
+    /**
+     * The label of the address to jump to when the condition is `true`,
+     * either an `else` or `end`.
+     */
     int nextLabel;
 } {
     <UNLESS>
@@ -210,7 +273,18 @@ void primmaryUnless() : {
     <END> { System.out.println("LBL" + nextLabel); }
 }
 
+/**
+ * The `else` statement of the `unless`/`else` block.
+ * Syntax: <ELSE> program()?
+ *
+ * @param label the label of this else.
+ *
+ * @return the label of the address to jump to when the condition is `true`, must be an `end`.
+ */
 int primmaryUnlessElse(int label) : {
+    /**
+     * The label of the address to jump to when the condition is `true`.
+     */
     int nextLabel;
 } {
     <ELSE> {
@@ -222,46 +296,109 @@ int primmaryUnlessElse(int label) : {
     { return nextLabel; }
 }
 
+/**
+ * A common syntax used in the `until` and `while` functions.
+ * Syntax: <DO> program()
+ *
+ * @param condition a boolean indicating wether the do jumps on true or false.
+ *
+ * @return the label which this `do` jumps to.
+ */
+int primmaryDo(boolean condition) : {
+    /**
+     * The condition of the `do` jump.
+     */
+    String conditionToString = condition ? "cierto" : "falso";
+    /**
+     * The label of the jump target.
+     */
+    int label;
+} {
+    <DO> {
+        label = getNewLabel();
+        System.out.println("\tsi" + conditionToString + "vea LBL" + label);
+    }
+    program()
+    { return label; }
+}
+
+/**
+ * The `until` function.
+ * Syntax: <UNTIL> expression() primmaryDo() <END>
+ */
 void primmaryUntil() : {
-    int firstLabel, lastLabel;
+    /**
+     * The address to jump to until the condition is met.
+     */
+    int firstLabel;
+    /**
+     * The label to jump to when the condition is met.
+     */
+    int endLabel;
 } {
     <UNTIL> {
         firstLabel = getNewLabel();
         System.out.println("LBL" + firstLabel);
     }
     expression()
-    lastLabel = primmaryDo(true)
+    endLabel = primmaryDo(true)
     <END> {
         System.out.println("\tvea LBL" + firstLabel);
-        System.out.println("LBL" + lastLabel);
+        System.out.println("LBL" + endLabel);
     }
 }
 
+/**
+ * The `while` function.
+ * Syntax: <WHILE> expression() primmaryDo() <END>
+ */
 void primmaryWhile() : {
-    int firstLabel, lastLabel;
+    /**
+     * The address to jump to until the condition is met.
+     */
+    int firstLabel;
+    /**
+     * The label to jump to when the condition is met.
+     */
+    int endLabel;
 } {
     <WHILE> {
         firstLabel = getNewLabel();
         System.out.println("LBL" + firstLabel);
     }
     expression()
-    lastLabel = primmaryDo(false)
+    endLabel = primmaryDo(false)
     <END> {
         System.out.println("\tvea LBL" + firstLabel);
-        System.out.println("LBL" + lastLabel);
+        System.out.println("LBL" + endLabel);
     }
 }
 
+/**
+ * The `print` function.
+ * Syntax: <PRINT> expression()
+ */
 void primmaryPrint() : {} {
     <PRINT>
     expression()  { System.out.println("\tprint"); }
 }
 
+/**
+ * An arithmetic expression.
+ * Syntax: mexpression() expression2()?
+ */
 void expression() : {} {
     mexpression() (expression2())?
 }
 
+/**
+ * Either an addition or substraction followed by another expression.
+ * Syntax: (+|-) expression()
+ */
 void expression2() : {
+    /**
+     * The type of operation, either sum or sub.
+     */
     String operation;
 } {
     (
@@ -271,11 +408,23 @@ void expression2() : {
     expression() { System.out.println('\t' + operation); }
 }
 
+/**
+ * A final or high priority arithmetic expression.
+ * A value follwed by another optional final expression.
+ * Syntax: value() mexpression2()?
+ */
 void mexpression() : {} {
     value() (mexpression2())?
 }
 
+/**
+ * Either a multiplication or division followed by another final expression.
+ * Syntax: (*|/) mexpression()?
+ */
 void mexpression2() : {
+    /**
+     * The type of operation, either mul or div.
+     */
     String operation;
 } {
     (
@@ -285,7 +434,15 @@ void mexpression2() : {
     mexpression() { System.out.println('\t' + operation); }
 }
 
+/**
+ * The final data of an expression.
+ * Either a number, a variable or the result of an expression inside parentheses.
+ * Syntax: <NUMBER> | <VARIABLE> | ( "(" expression() ")" ) 
+ */
 void value() : {
+    /**
+     * The number or variable.
+     */
     Token value;
 } {
     value = <NUMBER> { System.out.println("\tmete " + value.image); }
