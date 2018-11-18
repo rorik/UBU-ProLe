@@ -9,9 +9,9 @@ PRIMARY -> "if" EXPR "then" PROGRAM
         |  "while"  EXPR "do" PROGRAM "end"
         |  "print"  EXPR
 EXPR -> MEXPR EXPR2
-EXPR2 -> ["+", "-"] MEXPR EXPR2 | ""
+EXPR2 -> ["+", "-"] EXPR | ""
 MEXPR -> VALUE MEXPR2
-MEXPR2 -> ["*", "/"] VALUE MEXPR2 | ""
+MEXPR2 -> ["*", "/"] MEXPR | ""
 VALUE -> NUM | VAR | "(" EXPR ")"
 
 EQ -> ("=" | "+=" | "-=" | "/=" | "*=")
