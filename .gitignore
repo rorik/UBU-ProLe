@@ -28,3 +28,8 @@ hs_err_pid*
 
 # pdf assets
 **/assets/*.pdf
+
+# bison output
+lex.yy.c
+y.tab.*
+*.exe
