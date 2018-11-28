@@ -1,0 +1,27 @@
+=begin
+Ejemplo más completo, dispone de:
+  - Elementos anidados.
+  - Condicional con diversos elsif.
+=end
+var1 = 5*5 * (3-other);
+var2 = 0 + 0;
+while var1-var2
+do
+  var1 -= 2 ;
+  var2 += 2 ;
+  if var1/2
+  then var2=0 end
+end
+;
+
+if a-1 then
+  c = a + b
+elsif a-2 then
+  c = a - b
+else
+  c = 0
+end
+;
+
+print (c)
+# Fin del programa
