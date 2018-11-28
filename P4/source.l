@@ -31,3 +31,4 @@ NUM+        return NUMBER;
 "print"     return PRINT;
 ("class"|"ensure"|"nil"|"self"|"alias"|"defined"|"for"|"or"|"begin"|"return"|"next") return RESERVED;
 ({ALPHA}|"_")({ALPHA}|{NUM}|"_")*   return VARIABLE;
+%%
