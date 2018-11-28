@@ -1,6 +1,8 @@
 %{
 #include "y.tab.h"
 %}
+%option noyywrap
+
 ALPHA [a-zA-Z]
 NUM [0-9]
 %%
