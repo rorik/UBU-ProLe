@@ -1,5 +1,6 @@
 %{
 #include "y.tab.h"
+#include <string.h>
 %}
 %option noyywrap
 
@@ -7,8 +8,10 @@ ALPHA [a-zA-Z]
 NUM [0-9]
 %%
 [ \t\r\n]    ;
-ALPHA       return ALPHA;
-NUM+        return NUMBER;
+{NUM}+      {
+    yylval.value = atoi(yytext);
+    return NUMBER;
+}
 ";"         return EOL;
 "="         return EQUALS;
 "+"         return ADDITION;
@@ -32,5 +35,8 @@ NUM+        return NUMBER;
 "while"     return WHILE;
 "print"     return PRINT;
 ("class"|"ensure"|"nil"|"self"|"alias"|"defined"|"for"|"or"|"begin"|"return"|"next") return RESERVED;
-({ALPHA}|"_")({ALPHA}|{NUM}|"_")*   return VARIABLE;
+({ALPHA}|"_")({ALPHA}|{NUM}|"_")*   {
+    yylval.variable = strdup(yytext);
+    return VARIABLE;
+}
 %%

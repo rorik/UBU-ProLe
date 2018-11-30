@@ -12,7 +12,14 @@ int getNewLabel() {
 }
 %}
 
-%token ALPHA NUMBER EOL EQUALS ADDITION SUBSTRACTION MULTIPLICATION DIVISION ADDITION_EQUALS SUBSTRACTION_EQUALS MULTIPLICATION_EQUALS DIVISION_EQUALS PARENTHESIS_START PARENTHESIS_END END THEN DO ELSE IF ELSIF UNLESS UNTIL WHILE PRINT RESERVED VARIABLE
+%union {
+    int value;
+    char *variable;
+}
+
+%token EOL EQUALS ADDITION SUBSTRACTION MULTIPLICATION DIVISION ADDITION_EQUALS SUBSTRACTION_EQUALS MULTIPLICATION_EQUALS DIVISION_EQUALS PARENTHESIS_START PARENTHESIS_END END THEN DO ELSE IF ELSIF UNLESS UNTIL WHILE PRINT RESERVED
+%token <value> NUMBER
+%token <variable> VARIABLE
 
 %%
 
@@ -24,14 +31,17 @@ statement: primmary
     |   statementAssignment
 ;
 
-statementAssignment: VARIABLE assignment expression
+statementAssignment:
+    VARIABLE { printf("\tvalori %s", $1); }
+    assignment { if ($<variable>2[0] != '\0') printf("\tvalord %s", $1); }
+    expression { if ($<variable>2[0] != '\0') printf("\t%s", $<variable>2); printf("\tasigna"); }
 ;
 
-assignment: EQUALS
-    |   ADDITION_EQUALS
-    |   SUBSTRACTION_EQUALS
-    |   MULTIPLICATION_EQUALS
-    |   DIVISION_EQUALS
+assignment: EQUALS { $<variable>$ = ""; }
+    |   ADDITION_EQUALS { $<variable>$ = "sum"; }
+    |   SUBSTRACTION_EQUALS { $<variable>$ = "sub"; }
+    |   MULTIPLICATION_EQUALS { $<variable>$ = "mul"; }
+    |   DIVISION_EQUALS { $<variable>$ = "div"; }
 ;
 
 primmary: primmaryIf
