@@ -34,7 +34,7 @@ statement: primmary
 statementAssignment:
     VARIABLE { printf("\tvalori %s\n", $1); }
     assignment { if ($<variable>3[0] != '\0') printf("\tvalord %s\n", $1); }
-    expression { printf("\tasigna\n"); }
+    expression { if ($<variable>3[0] != '\0') printf("\t%s\n", $<variable>3); printf("\tasigna\n"); }
 ;
 
 assignment: EQUALS { $<variable>$ = ""; }
@@ -51,40 +51,73 @@ primmary: primmaryIf
     |   primmaryPrint
 ;
 
-primmaryThen: THEN program
+primmaryThen:
+    THEN
+    program
 ;
 
-primmaryIf: IF expression primmaryThen primmaryElseIf primmaryElse END
+primmaryIf:
+    IF
+    expression { printf("\tsifalsovea LBLx\n"); }
+    primmaryThen
+    primmaryElseIf
+    primmaryElse
+    END { printf("LBLx\n"); }
 ;
 
-primmaryElse: ELSE program
+primmaryElse:
+    ELSE { printf("\tvea LBLx\n"); printf("LBLx\n"); }
+    program
+    |   /* EPSILON */ { printf("LBLx\n"); }
+;
+
+primmaryElseIf:
+    ELSIF { printf("\tvea LBLx\n"); printf("LBLx\n"); }
+    expression { printf("\tsifalsovea LBLx\n"); }
+    primmaryThen
+    primmaryElseIf
     |   /* EPSILON */
 ;
 
-primmaryElseIf: ELSIF expression primmaryThen primmaryElseIf
+primmaryUnless:
+    UNLESS
+    expression{ printf("\tsiciertovea LBLx\n"); }
+    primmaryThen
+    primmaryUnlessElse
+    END { printf("LBLx\n"); }
+;
+
+primmaryUnlessElse:
+    ELSE { printf("\tvea LBLx\n"); printf("LBLx\n"); }
+    program
     |   /* EPSILON */
 ;
 
-primmaryUnless: UNLESS expression{ printf("\tsiciertovea LBLx\n"); } primmaryThen primmaryUnlessElse END { printf("LBLx\n"); }
+primmaryDo:
+    DO { printf("\tsiXvea LBLx\n"); }
+    program
 ;
 
-primmaryUnlessElse: ELSE { printf("\tvea LBLx"); printf("LBLx\n"); } program
-    |   /* EPSILON */
+primmaryUntil:
+    UNTIL { printf("LBLx\n"); }
+    expression
+    primmaryDo
+    END { printf("\tvea LBLx\n"); printf("LBLx\n"); }
 ;
 
-primmaryDo: DO { printf("\tsiXvea LBLx\n"); } program
+primmaryWhile:
+    WHILE { printf("LBLx\n"); }
+    expression
+    primmaryDo
+    END { printf("\tvea LBLx\n"); printf("LBLx\n"); }
 ;
 
-primmaryUntil: UNTIL { printf("LBLx\n"); } expression primmaryDo END { printf("\tvea LBLx\n"); printf("LBLx\n"); }
+primmaryPrint:
+    PRINT expression { printf("\tprint\n"); }
 ;
 
-primmaryWhile: WHILE { printf("LBLx\n"); } expression primmaryDo END { printf("\tvea LBLx\n"); printf("LBLx\n"); }
-;
-
-primmaryPrint: PRINT expression { printf("\tprint"); }
-;
-
-expression: mexpression expression2
+expression:
+    mexpression expression2
 ;
 
 expression2: ADDITION expression { printf("\tsum\n"); }
@@ -100,8 +133,8 @@ mexpression2: MULTIPLICATION mexpression { printf("\tmul\n"); }
     |   /* EPSILON */
 ;
 
-value: NUMBER { printf("\tmete %d", $1); }
-    |   VARIABLE { printf("\tvalord %s", $1); }
+value: NUMBER { printf("\tmete %d\n", $1); }
+    |   VARIABLE { printf("\tvalord %s\n", $1); }
     |   PARENTHESIS_START expression PARENTHESIS_END
 ;
 
