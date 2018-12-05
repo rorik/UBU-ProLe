@@ -4,10 +4,17 @@
 %}
 %option noyywrap
 
+%x COM_MULTI
+
 ALPHA [a-zA-Z]
 NUM [0-9]
 %%
-[ \t\r\n]    ;
+[ \t\r\n]           ;
+#.*                 ;
+"=begin"            BEGIN COM_MULTI;
+<COM_MULTI>"=end"   BEGIN INITIAL;
+<COM_MULTI>.        ;
+
 {NUM}+      {
     yylval.value = atoi(yytext);
     return NUMBER;
