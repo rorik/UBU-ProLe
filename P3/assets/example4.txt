@@ -15,10 +15,10 @@ end;
 
 if a - 1 then
     print 70
-end
+end;
 
 if a - 1 then
-    print 70
-else
     print 80
+else
+    print 90
 end
