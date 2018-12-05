@@ -72,7 +72,9 @@ primmaryIf:
     newLabel { printf("\tsifalsovea LBL%d\n", $<value>3); }
     primmaryThen
     { struct LabelPayload payload = { $<value>3, -1 }; $<payload>$ = &payload; } primmaryElseIf
-    { $<value>$ = $<payload>6->currentLabel; } primmaryElse { $<payload>6->endLabel = $<value>9; }
+    { $<value>$ = $<payload>6->currentLabel; } primmaryElse
+    { if ($<value>9 == $<payload>6->currentLabel && $<payload>6->endLabel != -1) printf("LBL%d\n", $<payload>6->endLabel);
+        $<payload>6->endLabel = $<value>9; }
     END { printf("LBL%d\n", $<payload>6->endLabel); }
 ;
 
