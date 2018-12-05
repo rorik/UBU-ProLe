@@ -21,4 +21,20 @@ if a - 1 then
     print 80
 else
     print 90
+end;
+
+if a - 1 then
+    print 100
+elsif a - 2 then
+    print 110
+end;
+
+if a - 3 then
+    print 120
+elsif a - 4 then
+    print 130
+elsif a - 5 then
+    print 140
+elsif a - 6 then
+    print 150
 end
