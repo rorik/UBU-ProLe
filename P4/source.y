@@ -10,11 +10,18 @@ int getNewLabel() {
     static int labelCount = 0;
     return labelCount++;
 }
+
+struct LabelPayload {
+    int currentLabel;
+    int endLabel;
+};
+
 %}
 
 %union {
     int value;
     char *string;
+    struct LabelPayload *payload;
 }
 
 %token EOL EQUALS ADDITION SUBSTRACTION MULTIPLICATION DIVISION ADDITION_EQUALS SUBSTRACTION_EQUALS MULTIPLICATION_EQUALS DIVISION_EQUALS PARENTHESIS_START PARENTHESIS_END END THEN DO ELSE IF ELSIF UNLESS UNTIL WHILE PRINT RESERVED
@@ -61,25 +68,30 @@ primmaryThen:
 
 primmaryIf:
     IF
-    expression { printf("\tsifalsovea LBLx\n"); }
+    expression
+    newLabel { printf("\tsifalsovea LBL%d\n", $<value>3); }
     primmaryThen
-    primmaryElseIf
-    primmaryElse
-    END { printf("LBLx\n"); }
-;
-
-primmaryElse:
-    ELSE { printf("\tvea LBLx\n"); printf("LBLx\n"); }
-    program
-    |   /* EPSILON */ { printf("LBLx\n"); }
+    { struct LabelPayload payload = { $<value>3, -1 }; $<payload>$ = &payload; } primmaryElseIf
+    { $<value>$ = $<payload>6->currentLabel; } primmaryElse { $<payload>6->endLabel = $<value>9; }
+    END { printf("LBL%d\n", $<payload>6->endLabel); }
 ;
 
 primmaryElseIf:
-    ELSIF { printf("\tvea LBLx\n"); printf("LBLx\n"); }
-    expression { printf("\tsifalsovea LBLx\n"); }
+    ELSIF
+    { if ($<payload>0->endLabel == -1) $<payload>0->endLabel = getNewLabel();
+        printf("\tvea LBL%d\n", $<payload>0->endLabel); printf("LBL%d\n", $<payload>0->currentLabel); }
+    expression
+    newLabel { $<payload>0->currentLabel = $<value>4; printf("\tsifalsovea LBL%d\n", $<value>4); }
     primmaryThen
-    primmaryElseIf
+    { $<payload>$ = $<payload>0; } primmaryElseIf
     |   /* EPSILON */
+;
+
+primmaryElse:
+    ELSE
+    newLabel { printf("\tvea LBL%d\n", $<value>2); printf("LBL%d\n", $<value>0); }
+    program { $<value>$ = $<value>2; }
+    |   /* EPSILON */ { $<value>$ = $<value>0; }
 ;
 
 primmaryUnless:
@@ -87,15 +99,8 @@ primmaryUnless:
     expression
     newLabel { printf("\tsiciertovea LBL%d\n", $<value>3); }
     primmaryThen
-    { $<value>$ = $<value>3; } primmaryUnlessElse
+    { $<value>$ = $<value>3; } primmaryElse
     END { printf("LBL%d\n", $<value>7); }
-;
-
-primmaryUnlessElse:
-    ELSE
-    newLabel { printf("\tvea LBL%d\n", $<value>2); printf("LBL%d\n", $<value>0); }
-    program { $<value>$ = $<value>2; }
-    |   /* EPSILON */ { $<value>$ = $<value>0; }
 ;
 
 primmaryUntilWhile:
@@ -144,7 +149,6 @@ void yyerror(const char *s) {
     printf("%s\n", s);
     exit(1);
 }
-
 
 int main(int argc, char **argv) {
     if(argc > 1) {
