@@ -44,10 +44,13 @@ assignment: EQUALS { $<string>$ = ""; }
     |   DIVISION_EQUALS { $<string>$ = "div"; }
 ;
 
+newLabel:
+    { $<value>$ = getNewLabel(); }
+;
+
 primmary: primmaryIf
     |   primmaryUnless
-    |   primmaryUntil
-    |   primmaryWhile
+    |   primmaryUntilWhile
     |   primmaryPrint
 ;
 
@@ -93,23 +96,18 @@ primmaryUnlessElse:
     |   /* EPSILON */
 ;
 
-primmaryDo:
-    DO { printf("\tsiXvea LBLx\n"); }
+primmaryUntilWhile:
+    UNTIL { $<value>$ = 1; } primmaryUntilWhileDo
+    |   WHILE { $<value>$ = 0; } primmaryUntilWhileDo
+;
+
+primmaryUntilWhileDo:
+    newLabel { printf("LBL%d\n", $<value>1); }
+    expression
+    DO
+    newLabel { printf("\tsi%svea LBL%d\n", $<value>0 ? "cierto" : "falso", $<value>5 ); }
     program
-;
-
-primmaryUntil:
-    UNTIL { printf("LBLx\n"); }
-    expression
-    primmaryDo
-    END { printf("\tvea LBLx\n"); printf("LBLx\n"); }
-;
-
-primmaryWhile:
-    WHILE { printf("LBLx\n"); }
-    expression
-    primmaryDo
-    END { printf("\tvea LBLx\n"); printf("LBLx\n"); }
+    END { printf("\tvea LBL%d\n", $<value>1); printf("LBL%d\n", $<value>5); }
 ;
 
 primmaryPrint:
@@ -137,7 +135,6 @@ value: NUMBER { printf("\tmete %d\n", $1); }
     |   VARIABLE { printf("\tvalord %s\n", $1); }
     |   PARENTHESIS_START expression PARENTHESIS_END
 ;
-
 
 %%
 
