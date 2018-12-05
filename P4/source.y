@@ -84,16 +84,18 @@ primmaryElseIf:
 
 primmaryUnless:
     UNLESS
-    expression{ printf("\tsiciertovea LBLx\n"); }
+    expression
+    newLabel { printf("\tsiciertovea LBL%d\n", $<value>3); }
     primmaryThen
-    primmaryUnlessElse
-    END { printf("LBLx\n"); }
+    { $<value>$ = $<value>3; } primmaryUnlessElse
+    END { printf("LBL%d\n", $<value>7); }
 ;
 
 primmaryUnlessElse:
-    ELSE { printf("\tvea LBLx\n"); printf("LBLx\n"); }
-    program
-    |   /* EPSILON */
+    ELSE
+    newLabel { printf("\tvea LBL%d\n", $<value>2); printf("LBL%d\n", $<value>0); }
+    program { $<value>$ = $<value>2; }
+    |   /* EPSILON */ { $<value>$ = $<value>0; }
 ;
 
 primmaryUntilWhile:
