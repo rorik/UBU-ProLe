@@ -13,7 +13,7 @@ NUM [0-9]
 #.*                 ;
 "=begin"            BEGIN COM_MULTI;
 <COM_MULTI>"=end"   BEGIN INITIAL;
-<COM_MULTI>.        ;
+<COM_MULTI>.|\n     ;
 
 {NUM}+      {
     yylval.value = atoi(yytext);
