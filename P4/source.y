@@ -32,9 +32,9 @@ statement: primmary
 ;
 
 statementAssignment:
-    VARIABLE { printf("\tvalori %s", $1); }
-    assignment { if ($<variable>2[0] != '\0') printf("\tvalord %s", $1); }
-    expression { if ($<variable>2[0] != '\0') printf("\t%s", $<variable>2); printf("\tasigna"); }
+    VARIABLE { printf("\tvalori %s\n", $1); }
+    assignment { if ($<variable>3[0] != '\0') printf("\tvalord %s\n", $1); }
+    expression { printf("\tasigna\n"); }
 ;
 
 assignment: EQUALS { $<variable>$ = ""; }
@@ -65,44 +65,44 @@ primmaryElseIf: ELSIF expression primmaryThen primmaryElseIf
     |   /* EPSILON */
 ;
 
-primmaryUnless: UNLESS expression primmaryThen primmaryUnlessElse END
+primmaryUnless: UNLESS expression{ printf("\tsiciertovea LBLx\n"); } primmaryThen primmaryUnlessElse END { printf("LBLx\n"); }
 ;
 
-primmaryUnlessElse: ELSE program
+primmaryUnlessElse: ELSE { printf("\tvea LBLx"); printf("LBLx\n"); } program
     |   /* EPSILON */
 ;
 
-primmaryDo: DO program
+primmaryDo: DO { printf("\tsiXvea LBLx\n"); } program
 ;
 
-primmaryUntil: UNTIL expression primmaryDo END
+primmaryUntil: UNTIL { printf("LBLx\n"); } expression primmaryDo END { printf("\tvea LBLx\n"); printf("LBLx\n"); }
 ;
 
-primmaryWhile: WHILE expression primmaryDo END
+primmaryWhile: WHILE { printf("LBLx\n"); } expression primmaryDo END { printf("\tvea LBLx\n"); printf("LBLx\n"); }
 ;
 
-primmaryPrint: PRINT expression
+primmaryPrint: PRINT expression { printf("\tprint"); }
 ;
 
 expression: mexpression expression2
 ;
 
-expression2: ADDITION
-    |   SUBSTRACTION
+expression2: ADDITION expression { printf("\tsum\n"); }
+    |   SUBSTRACTION expression { printf("\tsub\n"); }
     |   /* EPSILON */
 ;
 
-mexpression: value mexpression2
+mexpression: value  mexpression2
 ;
 
-mexpression2: MULTIPLICATION
-    |   DIVISION
+mexpression2: MULTIPLICATION mexpression { printf("\tmul\n"); }
+    |   DIVISION mexpression { printf("\tdiv\n"); }
     |   /* EPSILON */
 ;
 
-value: NUMBER
-    |   VARIABLE
-    | PARENTHESIS_START expression PARENTHESIS_END
+value: NUMBER { printf("\tmete %d", $1); }
+    |   VARIABLE { printf("\tvalord %s", $1); }
+    |   PARENTHESIS_START expression PARENTHESIS_END
 ;
 
 
