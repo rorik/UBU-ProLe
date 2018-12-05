@@ -43,7 +43,7 @@ NUM [0-9]
 "print"     return PRINT;
 ("class"|"ensure"|"nil"|"self"|"alias"|"defined"|"for"|"or"|"begin"|"return"|"next") return RESERVED;
 ({ALPHA}|"_")({ALPHA}|{NUM}|"_")*   {
-    yylval.variable = strdup(yytext);
+    yylval.string = strdup(yytext);
     return VARIABLE;
 }
 %%
