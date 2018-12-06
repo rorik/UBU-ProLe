@@ -265,7 +265,7 @@ class Article {
 
     @Override
     public String toString() {
-        return "\"" + getTitle() + "\" escrito por " + String.join(",", getAuthors()) +
+        return "\"" + getTitle() + "\" escrito por " + String.join(", ", getAuthors()) +
             ". Se publicó en el " + getPublicationYear() +
             ". Nº de secciones: " + getSections() + ".";
     }
