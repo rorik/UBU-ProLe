@@ -1,0 +1,75 @@
+<article article-type="research-article">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">Elsevier</journal-id>
+      <journal-title>Elsevier</journal-title>
+      <issn pub-type="ppub">0004-3702</issn><issn pub-type="epub">0004-3702</issn><publisher>
+      <publisher-name>Elsevier</publisher-name>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="doi">10.1016/j.artint.2010.01.001</article-id>
+      <article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research Article</subject>
+        </subj-group>
+        <subj-group><subject>Instance selection</subject><subject>Huge problems</subject></subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>Democratic instance selection</article-title><subtitle>A linear complexity instance selection algorithm based on classifier ensemble concepts</subtitle></title-group>
+      <contrib-group><contrib contrib-type="author">
+	<name name-style="western">
+	<surname>García-Osorio</surname>
+		<given-names>C.</given-names>
+	</name>
+	<aff>Departamento de Ingeniería Civil, Universidad de Burgos</aff>
+	</contrib><contrib contrib-type="author">
+	<name name-style="western">
+	<surname>de Haro-García</surname>
+		<given-names>A.</given-names>
+	</name>
+	<aff>Universidad de Córdoba</aff>
+	</contrib><contrib contrib-type="author">
+	<name name-style="western">
+	<surname>García-Pedrajas</surname>
+		<given-names>N.</given-names>
+	</name>
+	<aff>Universidad de Córdoba</aff>
+	</contrib></contrib-group>		
+      <pub-date pub-type="ppub">
+        <month>10</month>
+        <year>2010</year>
+      </pub-date>
+      <pub-date pub-type="epub">
+        <day>01</day>
+        <month>10</month>
+        <year>2010</year>
+      </pub-date>
+      <volume>174</volume>
+      <issue>5-6</issue>
+      <permissions>
+        <copyright-statement>© 2010 Elsevier</copyright-statement>
+        <copyright-year>2010</copyright-year>
+        <license license-type="open-access" xmlns:href="http://creativecommons.org/licenses/by/2.5/"><p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.</p></license>
+      </permissions>
+      <related-article related-article-type="companion" vol="2" page="e235" id="RA1" ext-link-type="pmc">
+			<article-title>Democratic instance selection</article-title>
+      </related-article>
+	  <abstract abstract-type="toc">
+      No abstract...
+	  </abstract>
+    </article-meta>
+  </front>
+  <body><sec>
+			<title>Introduction</title>
+				The overwhelming amount of data that is available nowadays in any field of research poses new problems for data mining and knowledge discovery methods.
+			</sec><sec>
+			<title>Democratic instance selection method</title>
+				The democratic method for instance selection consists of performing <bold>r</bold> rounds of an instance selection algorithm which is applied to a number of disjoint subsets of the dataset that constitutes a partition of the available data.
+			</sec></body>
+  <back>
+    <ack>
+      <p>-</p>
+    </ack>
+  </back>
+</article>

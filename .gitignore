@@ -1,6 +1,5 @@
 # Compiled class file
 *.class
-*.java
 
 # Log file
 *.log
@@ -33,3 +32,7 @@ hs_err_pid*
 lex.yy.c
 y.tab.*
 *.exe
+
+# javacc output
+P2/*.java
+P3/*.java
