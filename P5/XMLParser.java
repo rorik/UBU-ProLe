@@ -11,23 +11,24 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 import org.apache.xerces.parsers.SAXParser;
-/* XMLContentHandler imports */
+/* JATSHandler imports */
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
+/* XMLLocator imports */
+import java.util.Stack;
 /* Article imports */
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Stack;
 
 public class XMLParser {
     public void parse(String uri) {
         final XMLReader parser = new SAXParser();
-        final XMLContentHandler xmlContentHandler = new XMLContentHandler();
+        final JATSHandler handler = new JATSHandler();
 
         try {
-            parser.setProperty("http://xml.org/sax/properties/lexical-handler", xmlContentHandler);
+            parser.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
           } catch (SAXNotRecognizedException e) {
             System.out.println(e.getMessage());
             return;
@@ -39,7 +40,7 @@ public class XMLParser {
         try {
             InputSource inputSource = new InputSource();
             inputSource.setCharacterStream(new InputStreamReader(new FileInputStream(new File(uri))));
-            parser.setContentHandler(xmlContentHandler);
+            parser.setContentHandler(handler);
             parser.parse(inputSource);
         } catch (IOException e) {
             System.out.println("Error accessing the file: " + e.getMessage());
@@ -58,7 +59,7 @@ public class XMLParser {
     }
 }
 
-class XMLContentHandler implements ContentHandler, LexicalHandler {
+class JATSHandler implements ContentHandler, LexicalHandler {
     private Locator locator;
     private XMLLocator xmlLocator = new XMLLocator();
     private String longestNamespace = "";
