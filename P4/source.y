@@ -105,20 +105,11 @@ newLabel:
 /**
  * One of the built-in functions (`if`, `unless`, `until`, `while`, or `print`).
  */
-primmary: primmaryIfUnless
-    |   primmaryUntilWhile
-    |   primmaryPrint
-;
-
-/**
- * The (`if`|`unless`)/`elsif`/`else` initial block, with the following syntax:
- * (IF | UNLESS) primmaryIfUnless2
- *
- * @return a boolean <value> indicating the condition of the `then` jumps.
- */
-primmaryIfUnless:
-    IF { $<value>$ = 0; } primmaryIfUnless2
-    |   UNLESS { $<value>$ = 1; } primmaryIfUnless2
+primmary: IF { $<value>$ = 0; } primmaryIfUnless
+    |   UNLESS { $<value>$ = 1; } primmaryIfUnless
+    |   UNTIL { $<value>$ = 1; } primmaryUntilWhile
+    |   WHILE { $<value>$ = 0; } primmaryUntilWhile
+    |   PRINT expression { printf("\tprint\n"); }
 ;
 
 /**
@@ -127,7 +118,7 @@ primmaryIfUnless:
  *
  * @param <value>0, a boolean statement indicating the condition of the `then` jumps.
  */
-primmaryIfUnless2:
+primmaryIfUnless:
     expression
     newLabel { printf("\tsi%svea LBL%d\n", $<value>0 ? "cierto" : "falso", $<value>2); }
     THEN program
@@ -171,37 +162,18 @@ primmaryElse:
 ;
 
 /**
- * The `until`/`while` initial block.
- * Syntax: (UNTIL | WHILE) primmaryUntilWhile2
- *
- * @return a boolean <value> indicating the condition of the `do` jump.
- */
-primmaryUntilWhile:
-    UNTIL { $<value>$ = 1; } primmaryUntilWhile2
-    |   WHILE { $<value>$ = 0; } primmaryUntilWhile2
-;
-
-/**
  * The `until`/`while` block.
  * Syntax: expression DO program END
  *
  * @param <value>0, a boolean statement indicating the condition of the `do` jump.
  */
-primmaryUntilWhile2:
+primmaryUntilWhile:
     newLabel { printf("LBL%d\n", $<value>1); }
     expression
     DO
     newLabel { printf("\tsi%svea LBL%d\n", $<value>0 ? "cierto" : "falso", $<value>5 ); }
     program
     END { printf("\tvea LBL%d\n", $<value>1); printf("LBL%d\n", $<value>5); }
-;
-
-/**
- * The `print` function.
- * Syntax: <PRINT> expression()
- */
-primmaryPrint:
-    PRINT expression { printf("\tprint\n"); }
 ;
 
 /**
