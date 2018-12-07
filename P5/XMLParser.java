@@ -10,7 +10,10 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
-import org.apache.xerces.parsers.SAXParser;
+import org.xml.sax.helpers.XMLReaderFactory;
+/* JATSValidatorErrorHandler imports */
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXParseException;
 /* JATSHandler imports */
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Attributes;
@@ -23,24 +26,34 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class XMLParser {
-    public void parse(String uri) {
-        final XMLReader parser = new SAXParser();
+    public void parse(String uri, Boolean validation) {
+        final XMLReader parser;
+        try {
+           parser = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+        } catch (SAXException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         final JATSHandler handler = new JATSHandler();
 
         try {
             parser.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
-          } catch (SAXNotRecognizedException e) {
+            parser.setContentHandler(handler);
+            if (validation) {
+                parser.setFeature("http://xml.org/sax/features/validation", true);
+                parser.setErrorHandler(new JATSValidatorErrorHandler());
+            }
+        } catch (SAXNotRecognizedException e) {
             System.out.println(e.getMessage());
             return;
-          } catch (SAXNotSupportedException e) {
+        } catch (SAXNotSupportedException e) {
             System.out.println(e.getMessage());
             return;
-          }
+        }
 
         try {
             InputSource inputSource = new InputSource();
             inputSource.setCharacterStream(new InputStreamReader(new FileInputStream(new File(uri))));
-            parser.setContentHandler(handler);
             parser.parse(inputSource);
         } catch (IOException e) {
             System.out.println("Error accessing the file: " + e.getMessage());
@@ -50,12 +63,33 @@ public class XMLParser {
     }
 
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("XML file expected, usage: java XMLParser [XML URI]");
+        if (args.length == 0 || args.length > 2) {
+            System.err.println("XML file expected, usage: java XMLParser [XML URI] ([VALIDATION FLAG (ANY)])");
             System.exit(0);
         }
         XMLParser parser = new XMLParser();
-        parser.parse(args[0]);
+        parser.parse(args[0], args.length == 2 && args[1] != null && !args[1].equals(""));
+    }
+}
+
+class JATSValidatorErrorHandler implements ErrorHandler {
+
+    public void warning (SAXParseException exception) throws SAXException {
+        System.err.println("------ VALIDATION WARNING ------");
+        System.err.println(exception.getMessage());
+        System.err.println("--------------------------------");
+    }
+
+    public void error (SAXParseException exception) throws SAXException {
+        System.err.println("------ VALIDATION ERROR ------");
+        System.err.println(exception.getMessage());
+        System.err.println("------------------------------");
+    }
+
+    public void fatalError (SAXParseException exception) throws SAXException {
+        System.err.println("------ VALIDATION FATAL ERROR ------");
+        System.err.println(exception.getMessage());
+        System.err.println("------------------------------------");
     }
 }
 
