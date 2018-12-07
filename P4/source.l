@@ -1,6 +1,11 @@
 %{
 #include "y.tab.h"
 #include <string.h>
+/**
+ * The declarations of the tokens to be parsed by the parser.
+ * @author <a href="mailto:rdg1003@alu.ubu.es">Rodrigo Díaz García</a>
+ * @author <a href="mailto:sbm0020@alu.ubu.es">Sergio Bueno Medina</a>
+ */
 %}
 %option noyywrap
 
@@ -11,7 +16,7 @@ NUM [0-9]
 %%
 [ \t\r\n]           ;
 #.*                 ;
-"=begin"            BEGIN COM_MULTI;
+"=begin"            BEGIN COM_MULTI;/*For ignoring multiline comments*/
 <COM_MULTI>"=end"   BEGIN INITIAL;
 <COM_MULTI>.|\n     ;
 
