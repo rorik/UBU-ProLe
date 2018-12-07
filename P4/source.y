@@ -113,21 +113,14 @@ primmaryPrint:
     PRINT expression { printf("\tprint\n"); }
 ;
 
-expression:
-    mexpression expression2
+expression: expression ADDITION mexpression { printf("\tsum\n"); }
+    |   expression SUBSTRACTION mexpression { printf("\tsub\n"); }
+    |   mexpression
 ;
 
-expression2: ADDITION expression { printf("\tsum\n"); }
-    |   SUBSTRACTION expression { printf("\tsub\n"); }
-    |   /* EPSILON */
-;
-
-mexpression: value  mexpression2
-;
-
-mexpression2: MULTIPLICATION mexpression { printf("\tmul\n"); }
-    |   DIVISION mexpression { printf("\tdiv\n"); }
-    |   /* EPSILON */
+mexpression: mexpression MULTIPLICATION value { printf("\tmul\n"); }
+    |   mexpression DIVISION value { printf("\tdiv\n"); }
+    |   value
 ;
 
 value: NUMBER { printf("\tmete %d\n", $1); }
