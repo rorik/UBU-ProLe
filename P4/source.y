@@ -94,7 +94,7 @@ assignment: EQUALS { $<string>$ = ""; }
 ;
 
 /**
- * Creates a new label.
+ * Creates a new label and stores it in the stack.
  *
  * @return a <value> with the new label.
  */
@@ -120,28 +120,37 @@ primmary: IF { $<value>$ = 0; } primmaryIfUnless
  */
 primmaryIfUnless:
     expression
-    newLabel { printf("\tsi%svea LBL%d\n", $<value>0 ? "cierto" : "falso", $<value>2); }
-    THEN program
-    { struct LabelPayload payload = { $<value>2, UNDEFINED }; $<payload>$ = &payload; } primmaryElseIf
+    newLabel
+    { printf("\tsi%svea LBL%d\n", $<value>0 ? "cierto" : "falso", $<value>2); }
+    THEN
+    program
+    { $<value>$ = $<value>0; }
+    { struct LabelPayload payload = { $<value>2, UNDEFINED }; $<payload>$ = &payload; }
+    primmaryElseIf
     primmaryElse
-    { if (!$<value>8 && $<payload>6->endLabel != UNDEFINED) printf("LBL%d\n", $<payload>6->currentLabel); }
-    END { printf("LBL%d\n", $<payload>6->endLabel == UNDEFINED ? $<payload>6->currentLabel : $<payload>6->endLabel); }
+    { $<value>$ = $<payload>7->endLabel == UNDEFINED; }
+    { if (!$<value>9 && !$<value>10) printf("LBL%d\n", $<payload>7->currentLabel); }
+    END
+    { printf("LBL%d\n", $<value>10 ? $<payload>7->currentLabel : $<payload>7->endLabel); }
 ;
 
 /**
  * The `elseif` statement inside an (`if`|`unless`)/`elsif`/`else` block.
  * Syntax: (ELSIF expression THEN program)*
  *
+ * @param <value>-1, a boolean statement indicating the condition of the `then` jumps.
  * @param <payload>0, the LabelPayload of the `if`/`unless` block.
  */
 primmaryElseIf:
     ELSIF
-    { if ($<payload>0->endLabel == UNDEFINED) $<payload>0->endLabel = getNewLabel();
-        printf("\tvea LBL%d\n", $<payload>0->endLabel); printf("LBL%d\n", $<payload>0->currentLabel); }
+    { if ($<payload>0->endLabel == UNDEFINED) $<payload>0->endLabel = getNewLabel(); }
+    { printf("\tvea LBL%d\nLBL%d\n", $<payload>0->endLabel, $<payload>0->currentLabel); }
     expression
-    newLabel { $<payload>0->currentLabel = $<value>4; printf("\tsifalsovea LBL%d\n", $<value>4); }
-    THEN program
-    { $<payload>$ = $<payload>0; } primmaryElseIf
+    { printf("\tsi%svea LBL%d\n", $<value>-1 ? "cierto" : "falso", $<payload>0->currentLabel = getNewLabel()); }
+    THEN
+    program
+    { $<payload>$ = $<payload>0; }
+    primmaryElseIf
     |   /* EPSILON */
 ;
 
@@ -155,8 +164,8 @@ primmaryElseIf:
  */
 primmaryElse:
     ELSE
-    { if ($<payload>-1->endLabel == UNDEFINED) $<payload>-1->endLabel = getNewLabel();
-        printf("\tvea LBL%d\n", $<payload>-1->endLabel); printf("LBL%d\n", $<payload>-1->currentLabel); }
+    { if ($<payload>-1->endLabel == UNDEFINED) $<payload>-1->endLabel = getNewLabel(); }
+    { printf("\tvea LBL%d\nLBL%d\n", $<payload>-1->endLabel, $<payload>-1->currentLabel); }
     program { $<value>$ = 1; }
     |   /* EPSILON */ { $<value>$ = 0; }
 ;
