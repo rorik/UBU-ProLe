@@ -56,25 +56,23 @@ newLabel:
     { $<value>$ = getNewLabel(); }
 ;
 
-primmary: primmaryIf
-    |   primmaryUnless
+primmary: primmaryIfUnless
     |   primmaryUntilWhile
     |   primmaryPrint
 ;
 
-primmaryThen:
-    THEN
-    program
+primmaryIfUnless:
+    IF { $<value>$ = 0; } primmaryIfUnless2
+    |   UNLESS { $<value>$ = 1; } primmaryIfUnless2
 ;
 
-primmaryIf:
-    IF
+primmaryIfUnless2:
     expression
-    newLabel { printf("\tsifalsovea LBL%d\n", $<value>3); }
-    primmaryThen
-    { struct LabelPayload payload = { $<value>3, UNDEFINED }; $<payload>$ = &payload; } primmaryElseIf
-    { $<payload>$ = $<payload>6; } primmaryElse
-    { if (!$<value>9 && $<payload>6->endLabel != UNDEFINED) printf("LBL%d\n", $<payload>6->currentLabel); }
+    newLabel { printf("\tsi%svea LBL%d\n", $<value>0 ? "cierto" : "falso", $<value>2); }
+    THEN program
+    { struct LabelPayload payload = { $<value>2, UNDEFINED }; $<payload>$ = &payload; } primmaryElseIf
+    primmaryElse
+    { if (!$<value>8 && $<payload>6->endLabel != UNDEFINED) printf("LBL%d\n", $<payload>6->currentLabel); }
     END { printf("LBL%d\n", $<payload>6->endLabel == UNDEFINED ? $<payload>6->currentLabel : $<payload>6->endLabel); }
 ;
 
@@ -84,34 +82,25 @@ primmaryElseIf:
         printf("\tvea LBL%d\n", $<payload>0->endLabel); printf("LBL%d\n", $<payload>0->currentLabel); }
     expression
     newLabel { $<payload>0->currentLabel = $<value>4; printf("\tsifalsovea LBL%d\n", $<value>4); }
-    primmaryThen
+    THEN program
     { $<payload>$ = $<payload>0; } primmaryElseIf
     |   /* EPSILON */
 ;
 
 primmaryElse:
     ELSE
-    { if ($<payload>0->endLabel == UNDEFINED) $<payload>0->endLabel = getNewLabel();
-        printf("\tvea LBL%d\n", $<payload>0->endLabel); printf("LBL%d\n", $<payload>0->currentLabel); }
+    { if ($<payload>-1->endLabel == UNDEFINED) $<payload>-1->endLabel = getNewLabel();
+        printf("\tvea LBL%d\n", $<payload>-1->endLabel); printf("LBL%d\n", $<payload>-1->currentLabel); }
     program { $<value>$ = 1; }
     |   /* EPSILON */ { $<value>$ = 0; }
 ;
 
-primmaryUnless:
-    UNLESS
-    expression
-    newLabel { printf("\tsiciertovea LBL%d\n", $<value>3); }
-    primmaryThen
-    { struct LabelPayload payload = { $<value>3, UNDEFINED }; $<payload>$ = &payload; } primmaryElse
-    END { printf("LBL%d\n", $<value>7 ? $<payload>6->endLabel : $<payload>6->currentLabel); }
-;
-
 primmaryUntilWhile:
-    UNTIL { $<value>$ = 1; } primmaryUntilWhileDo
-    |   WHILE { $<value>$ = 0; } primmaryUntilWhileDo
+    UNTIL { $<value>$ = 1; } primmaryUntilWhile2
+    |   WHILE { $<value>$ = 0; } primmaryUntilWhile2
 ;
 
-primmaryUntilWhileDo:
+primmaryUntilWhile2:
     newLabel { printf("LBL%d\n", $<value>1); }
     expression
     DO
@@ -155,8 +144,7 @@ void yyerror(const char *s) {
 
 int main(int argc, char **argv) {
     if(argc > 1) {
-		FILE *file;
-		file=fopen(argv[1], "r");
+		FILE *file = fopen(argv[1], "r");
 		if(!file) {
 			fprintf(stderr, "no se puede abrir %s\n", argv[1]);
 			exit(1);
