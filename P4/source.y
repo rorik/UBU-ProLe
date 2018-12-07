@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#define UNDEFINED -1
 
 int yylex();
 extern FILE *yyin;
@@ -71,16 +72,15 @@ primmaryIf:
     expression
     newLabel { printf("\tsifalsovea LBL%d\n", $<value>3); }
     primmaryThen
-    { struct LabelPayload payload = { $<value>3, -1 }; $<payload>$ = &payload; } primmaryElseIf
-    { $<value>$ = $<payload>6->currentLabel; } primmaryElse
-    { if ($<value>9 == $<payload>6->currentLabel && $<payload>6->endLabel != -1) printf("LBL%d\n", $<payload>6->endLabel);
-        $<payload>6->endLabel = $<value>9; }
-    END { printf("LBL%d\n", $<payload>6->endLabel); }
+    { struct LabelPayload payload = { $<value>3, UNDEFINED }; $<payload>$ = &payload; } primmaryElseIf
+    { $<payload>$ = $<payload>6; } primmaryElse
+    { if (!$<value>9 && $<payload>6->endLabel != UNDEFINED) printf("LBL%d\n", $<payload>6->currentLabel); }
+    END { printf("LBL%d\n", $<payload>6->endLabel == UNDEFINED ? $<payload>6->currentLabel : $<payload>6->endLabel); }
 ;
 
 primmaryElseIf:
     ELSIF
-    { if ($<payload>0->endLabel == -1) $<payload>0->endLabel = getNewLabel();
+    { if ($<payload>0->endLabel == UNDEFINED) $<payload>0->endLabel = getNewLabel();
         printf("\tvea LBL%d\n", $<payload>0->endLabel); printf("LBL%d\n", $<payload>0->currentLabel); }
     expression
     newLabel { $<payload>0->currentLabel = $<value>4; printf("\tsifalsovea LBL%d\n", $<value>4); }
@@ -91,9 +91,10 @@ primmaryElseIf:
 
 primmaryElse:
     ELSE
-    newLabel { printf("\tvea LBL%d\n", $<value>2); printf("LBL%d\n", $<value>0); }
-    program { $<value>$ = $<value>2; }
-    |   /* EPSILON */ { $<value>$ = $<value>0; }
+    { if ($<payload>0->endLabel == UNDEFINED) $<payload>0->endLabel = getNewLabel();
+        printf("\tvea LBL%d\n", $<payload>0->endLabel); printf("LBL%d\n", $<payload>0->currentLabel); }
+    program { $<value>$ = 1; }
+    |   /* EPSILON */ { $<value>$ = 0; }
 ;
 
 primmaryUnless:
@@ -101,8 +102,8 @@ primmaryUnless:
     expression
     newLabel { printf("\tsiciertovea LBL%d\n", $<value>3); }
     primmaryThen
-    { $<value>$ = $<value>3; } primmaryElse
-    END { printf("LBL%d\n", $<value>7); }
+    { struct LabelPayload payload = { $<value>3, UNDEFINED }; $<payload>$ = &payload; } primmaryElse
+    END { printf("LBL%d\n", $<value>7 ? $<payload>6->endLabel : $<payload>6->currentLabel); }
 ;
 
 primmaryUntilWhile:
