@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cml>
+    <molecule id="m0">
+        <formula concise="C17 H26 O" title="C1C(CC(=O)C2CC3)C(C)(C(C1)=CCC2CC3)C"/>
+        <atomArray>
+            <atom elementType="C" hydrogenCount="1" id="a0" nonHydrogenCount="2" x2="78.86665" y2="162.78369"/>
+            <atom elementType="C" hydrogenCount="2" id="a1" nonHydrogenCount="0" x2="60.26966" y2="167.91391"/>
+            <atom elementType="C" hydrogenCount="2" id="a2" nonHydrogenCount="0" x2="50.97117" y2="184.26642"/>
+            <atom elementType="C" hydrogenCount="0" id="a3" nonHydrogenCount="3" x2="69.24752" y2="179.45686"/>
+            <atom elementType="C" hydrogenCount="0" id="a4" nonHydrogenCount="4" x2="69.40784" y2="146.27086"/>
+            <atom elementType="C" hydrogenCount="3" id="a5" nonHydrogenCount="0" x2="83.03494" y2="132.64375"/>
+            <atom elementType="C" hydrogenCount="3" id="a6" nonHydrogenCount="0" x2="53.05531" y2="136.81204"/>
+            <atom elementType="C" hydrogenCount="2" id="a7" nonHydrogenCount="0" x2="97.46365" y2="167.91391"/>
+            <atom elementType="C" hydrogenCount="1" id="a8" nonHydrogenCount="1" x2="88.16515" y2="184.74738"/>
+            <atom elementType="C" hydrogenCount="2" id="a9" nonHydrogenCount="0" x2="97.62396" y2="201.26022"/>
+            <atom elementType="C" hydrogenCount="1" id="a10" nonHydrogenCount="3" x2="116.22095" y2="196.45065"/>
+            <atom elementType="C" hydrogenCount="2" id="a11" nonHydrogenCount="0" x2="125.84009" y2="212.96350"/>
+            <atom elementType="C" hydrogenCount="2" id="a12" nonHydrogenCount="0" x2="144.75772" y2="212.80319"/>
+            <atom elementType="C" hydrogenCount="2" id="a13" nonHydrogenCount="0" x2="154.69748" y2="196.29034"/>
+            <atom elementType="C" hydrogenCount="2" id="a14" nonHydrogenCount="0" x2="144.91803" y2="179.45686"/>
+            <atom elementType="C" hydrogenCount="1" id="a15" nonHydrogenCount="3" x2="125.67977" y2="179.29654"/>
+            <atom elementType="C" hydrogenCount="0" id="a16" nonHydrogenCount="3" x2="118.46542" y2="160.69955"/>
+            <atom elementType="O" hydrogenCount="0" id="a17" nonHydrogenCount="1" x2="128.24487" y2="144.02638"/>
+            <atom elementType="H" hydrogenCount="0" id="a18" nonHydrogenCount="1" x2="135.77986" y2="162.94402"/>
+            <atom elementType="H" hydrogenCount="0" id="a19" nonHydrogenCount="1" x2="107.08278" y2="212.80319"/>
+        </atomArray>
+        <bondArray>
+            <bond atomRefs2="a0 a1" order="1"/>
+            <bond atomRefs2="a1 a2" order="1"/>
+            <bond atomRefs2="a2 a3" order="1"/>
+            <bond atomRefs2="a3 a4" order="1"/>
+            <bond atomRefs2="a4 a5" order="1"/>
+            <bond atomRefs2="a4 a6" order="1"/>
+            <bond atomRefs2="a0 a7" order="1"/>
+            <bond atomRefs2="a3 a8" order="2"/>
+            <bond atomRefs2="a8 a9" order="1"/>
+            <bond atomRefs2="a9 a10" order="1"/>
+            <bond atomRefs2="a10 a11" order="1"/>
+            <bond atomRefs2="a11 a12" order="1"/>
+            <bond atomRefs2="a12 a13" order="1"/>
+            <bond atomRefs2="a13 a14" order="1"/>
+            <bond atomRefs2="a14 a15" order="1"/>
+            <bond atomRefs2="a15 a16" order="1"/>
+            <bond atomRefs2="a16 a7" order="1"/>
+            <bond atomRefs2="a16 a17" order="2"/>
+            <bond atomRefs2="a15 a18" order="1">
+                <bondStereo>W</bondStereo>
+            </bond>
+            <bond atomRefs2="a10 a19" order="1">
+                <bondStereo>W</bondStereo>
+            </bond>
+            <bond atomRefs2="a4 a0" order="1"/>
+            <bond atomRefs2="a15 a10" order="1"/>
+        </bondArray>
+    </molecule>
+</cml>

@@ -1,0 +1,112 @@
+<?xml version="1.0" standalone="yes"?>
+<cml>
+  <molecule id="dopamine">
+    <formula concise="C8 H11 N O2" title="Dopamine"/>
+    <atomArray>
+      <atom elementType="C" id="dopamine_c1"/>
+      <atom elementType="C" id="dopamine_c2"/>
+      <atom elementType="C" id="dopamine_c3"/>
+      <atom elementType="C" id="dopamine_c4"/>
+      <atom elementType="C" id="dopamine_c5"/>
+      <atom elementType="C" id="dopamine_c6"/>
+      <atom elementType="C" id="dopamine_c7"/>
+      <atom elementType="C" id="dopamine_c8"/>
+      <atom elementType="H" id="dopamine_h1"/>
+      <atom elementType="H" id="dopamine_h2"/>
+      <atom elementType="H" id="dopamine_h3"/>
+      <atom elementType="H" id="dopamine_h4"/>
+      <atom elementType="H" id="dopamine_h5"/>
+      <atom elementType="H" id="dopamine_h6"/>
+      <atom elementType="H" id="dopamine_h7"/>
+      <atom elementType="H" id="dopamine_h8"/>
+      <atom elementType="H" id="dopamine_h9"/>
+      <atom elementType="H" id="dopamine_h10"/>
+      <atom elementType="H" id="dopamine_h11"/>
+      <atom elementType="N" id="dopamine_n1"/>
+      <atom elementType="O" id="dopamine_o1"/>
+      <atom elementType="O" id="dopamine_o2"/>
+    </atomArray>
+  </molecule>
+  <molecule id="morphine">
+    <formula concise="C17 H19 N O3" title="Morphine"/>
+    <atomArray>
+      <atom elementType="C" id="morphine_c1"/>
+      <atom elementType="C" id="morphine_c2"/>
+      <atom elementType="C" id="morphine_c3"/>
+      <atom elementType="C" id="morphine_c4"/>
+      <atom elementType="C" id="morphine_c5"/>
+      <atom elementType="C" id="morphine_c6"/>
+      <atom elementType="C" id="morphine_c7"/>
+      <atom elementType="C" id="morphine_c8"/>
+      <atom elementType="C" id="morphine_c9"/>
+      <atom elementType="C" id="morphine_c10"/>
+      <atom elementType="C" id="morphine_c11"/>
+      <atom elementType="C" id="morphine_c12"/>
+      <atom elementType="C" id="morphine_c13"/>
+      <atom elementType="C" id="morphine_c14"/>
+      <atom elementType="C" id="morphine_c15"/>
+      <atom elementType="C" id="morphine_c16"/>
+      <atom elementType="C" id="morphine_c17"/>
+      <atom elementType="H" id="morphine_h1"/>
+      <atom elementType="H" id="morphine_h2"/>
+      <atom elementType="H" id="morphine_h3"/>
+      <atom elementType="H" id="morphine_h4"/>
+      <atom elementType="H" id="morphine_h5"/>
+      <atom elementType="H" id="morphine_h6"/>
+      <atom elementType="H" id="morphine_h7"/>
+      <atom elementType="H" id="morphine_h8"/>
+      <atom elementType="H" id="morphine_h9"/>
+      <atom elementType="H" id="morphine_h10"/>
+      <atom elementType="H" id="morphine_h11"/>
+      <atom elementType="H" id="morphine_h12"/>
+      <atom elementType="H" id="morphine_h13"/>
+      <atom elementType="H" id="morphine_h14"/>
+      <atom elementType="H" id="morphine_h15"/>
+      <atom elementType="H" id="morphine_h16"/>
+      <atom elementType="H" id="morphine_h17"/>
+      <atom elementType="H" id="morphine_h18"/>
+      <atom elementType="H" id="morphine_h19"/>
+      <atom elementType="N" id="morphine_n1"/>
+      <atom elementType="O" id="morphine_o1"/>
+      <atom elementType="O" id="morphine_o2"/>
+      <atom elementType="O" id="morphine_o3"/>
+    </atomArray>
+  </molecule>
+  <molecule id="ketamine">
+    <formula concise="C13 H16 Cl N O" title="Ketamine"/>
+    <atomArray>
+      <atom elementType="C" id="ketamine_c1"/>
+      <atom elementType="C" id="ketamine_c2"/>
+      <atom elementType="C" id="ketamine_c3"/>
+      <atom elementType="C" id="ketamine_c4"/>
+      <atom elementType="C" id="ketamine_c5"/>
+      <atom elementType="C" id="ketamine_c6"/>
+      <atom elementType="C" id="ketamine_c7"/>
+      <atom elementType="C" id="ketamine_c8"/>
+      <atom elementType="C" id="ketamine_c9"/>
+      <atom elementType="C" id="ketamine_c10"/>
+      <atom elementType="C" id="ketamine_c11"/>
+      <atom elementType="C" id="ketamine_c12"/>
+      <atom elementType="C" id="ketamine_c13"/>
+      <atom elementType="H" id="ketamine_h1"/>
+      <atom elementType="H" id="ketamine_h2"/>
+      <atom elementType="H" id="ketamine_h3"/>
+      <atom elementType="H" id="ketamine_h4"/>
+      <atom elementType="H" id="ketamine_h5"/>
+      <atom elementType="H" id="ketamine_h6"/>
+      <atom elementType="H" id="ketamine_h7"/>
+      <atom elementType="H" id="ketamine_h8"/>
+      <atom elementType="H" id="ketamine_h9"/>
+      <atom elementType="H" id="ketamine_h10"/>
+      <atom elementType="H" id="ketamine_h11"/>
+      <atom elementType="H" id="ketamine_h12"/>
+      <atom elementType="H" id="ketamine_h13"/>
+      <atom elementType="H" id="ketamine_h14"/>
+      <atom elementType="H" id="ketamine_h15"/>
+      <atom elementType="H" id="ketamine_h16"/>
+      <atom elementType="Cl" id="ketamine_cl1"/>
+      <atom elementType="N" id="ketamine_n1"/>
+      <atom elementType="O" id="ketamine_o1"/>
+    </atomArray>
+  </molecule>
+</cml>

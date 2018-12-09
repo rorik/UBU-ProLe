@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cml>
+  <molecule id="water">
+    <formula concise="H2 O" title="Water"/>
+    <atomArray>
+      <atom elementType="H" id="water_h1"/>
+      <atom elementType="H" id="water_h2"/>
+      <atom elementType="O" id="water_o1"/>
+    </atomArray>
+  </molecule>
+</cml>

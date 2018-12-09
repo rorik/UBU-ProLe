@@ -1,0 +1,8 @@
+CML (http://www.xml-cml.org, https://en.wikipedia.org/wiki/Chemical_Markup_Language) es un vocabulario XML para la especificación de compuestos y reacciones químicas.
+
+Algunas de las tareas que podría hacer el analizador son:
+
+a. Contabilizar el número de átomos de que está compuesto una molécula.
+b. En un archivo con varias definiciones de moléculas, encontrar aquella
+con más átomos.
+c. Encontrar la molécula cuya definición haga uso de más sub-moléculas.

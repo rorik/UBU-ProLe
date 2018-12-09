@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cml>
+    <molecule id="rna">
+        <formula title="Ribonucleic acid"/>
+        <molecule id="adenine">
+            <formula concise="C5 H5 N5" title="Adenine"/>
+            <atom elementType="C" id="adenine_c1"/>
+            <atom elementType="C" id="adenine_c2"/>
+            <atom elementType="C" id="adenine_c3"/>
+            <atom elementType="C" id="adenine_c4"/>
+            <atom elementType="C" id="adenine_c5"/>
+            <atom elementType="H" id="adenine_h1"/>
+            <atom elementType="H" id="adenine_h2"/>
+            <atom elementType="H" id="adenine_h3"/>
+            <atom elementType="H" id="adenine_h4"/>
+            <atom elementType="H" id="adenine_h5"/>
+            <atom elementType="N" id="adenine_n1"/>
+            <atom elementType="N" id="adenine_n2"/>
+            <atom elementType="N" id="adenine_n3"/>
+            <atom elementType="N" id="adenine_n4"/>
+            <atom elementType="N" id="adenine_n5"/>
+        </molecule>
+        <molecule id="cytosine">
+            <formula concise="C4 H5 N3 O" title="Cytosine"/>
+            <atom elementType="C" id="cytosine_c1"/>
+            <atom elementType="C" id="cytosine_c2"/>
+            <atom elementType="C" id="cytosine_c3"/>
+            <atom elementType="C" id="cytosine_c4"/>
+            <atom elementType="H" id="cytosine_h1"/>
+            <atom elementType="H" id="cytosine_h2"/>
+            <atom elementType="H" id="cytosine_h3"/>
+            <atom elementType="H" id="cytosine_h4"/>
+            <atom elementType="H" id="cytosine_h5"/>
+            <atom elementType="N" id="cytosine_n1"/>
+            <atom elementType="N" id="cytosine_n2"/>
+            <atom elementType="N" id="cytosine_n3"/>
+            <atom elementType="O" id="cytosine_o1"/>
+        </molecule>
+        <molecule id="guanine">
+            <formula concise="C5 H5 N5 O" title="Guanine"/>
+            <atom elementType="C" id="guanine_c1"/>
+            <atom elementType="C" id="guanine_c2"/>
+            <atom elementType="C" id="guanine_c3"/>
+            <atom elementType="C" id="guanine_c4"/>
+            <atom elementType="C" id="guanine_c5"/>
+            <atom elementType="H" id="guanine_h1"/>
+            <atom elementType="H" id="guanine_h2"/>
+            <atom elementType="H" id="guanine_h3"/>
+            <atom elementType="H" id="guanine_h4"/>
+            <atom elementType="H" id="guanine_h5"/>
+            <atom elementType="N" id="guanine_n1"/>
+            <atom elementType="N" id="guanine_n2"/>
+            <atom elementType="N" id="guanine_n3"/>
+            <atom elementType="N" id="guanine_n4"/>
+            <atom elementType="N" id="guanine_n5"/>
+            <atom elementType="O" id="guanine_o1"/>
+        </molecule>
+        <molecule id="uracil">
+            <formula concise="C4 H4 N2 O2" title="Uracil"/>
+            <atom elementType="C" id="uracil_c1"/>
+            <atom elementType="C" id="uracil_c2"/>
+            <atom elementType="C" id="uracil_c3"/>
+            <atom elementType="C" id="uracil_c4"/>
+            <atom elementType="H" id="uracil_h1"/>
+            <atom elementType="H" id="uracil_h2"/>
+            <atom elementType="H" id="uracil_h3"/>
+            <atom elementType="H" id="uracil_h4"/>
+            <atom elementType="N" id="uracil_n1"/>
+            <atom elementType="N" id="uracil_n2"/>
+            <atom elementType="O" id="uracil_o1"/>
+            <atom elementType="O" id="uracil_o2"/>
+        </molecule>
+        <molecule id="ribose">
+            <formula concise="C5 H10 O5" title="Ribose"/>
+            <atom elementType="C" id="ribose_c1"/>
+            <atom elementType="C" id="ribose_c2"/>
+            <atom elementType="C" id="ribose_c3"/>
+            <atom elementType="C" id="ribose_c4"/>
+            <atom elementType="C" id="ribose_c5"/>
+            <atom elementType="H" id="ribose_h1"/>
+            <atom elementType="H" id="ribose_h2"/>
+            <atom elementType="H" id="ribose_h3"/>
+            <atom elementType="H" id="ribose_h4"/>
+            <atom elementType="H" id="ribose_h5"/>
+            <atom elementType="H" id="ribose_h6"/>
+            <atom elementType="H" id="ribose_h7"/>
+            <atom elementType="H" id="ribose_h8"/>
+            <atom elementType="H" id="ribose_h9"/>
+            <atom elementType="H" id="ribose_h10"/>
+            <atom elementType="O" id="ribose_o1"/>
+            <atom elementType="O" id="ribose_o2"/>
+            <atom elementType="O" id="ribose_o3"/>
+            <atom elementType="O" id="ribose_o4"/>
+            <atom elementType="O" id="ribose_o5"/>
+        </molecule>
+    </molecule>
+</cml>
