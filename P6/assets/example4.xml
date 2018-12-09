@@ -94,4 +94,181 @@
             <atom elementType="O" id="ribose_o5"/>
         </molecule>
     </molecule>
+    <molecule id="hydrocodone/apap">
+        <formula title="Hydrocodone/nalaurylsulfoacetate"/>
+        <molecule id="hydrocodone">
+            <formula concise="C18 H21 N O3" title="Hydrocodone"/>
+            <atomArray>
+                <atom elementType="C" id="hydrocodone_c1"/>
+                <atom elementType="C" id="hydrocodone_c2"/>
+                <atom elementType="C" id="hydrocodone_c3"/>
+                <atom elementType="C" id="hydrocodone_c4"/>
+                <atom elementType="C" id="hydrocodone_c5"/>
+                <atom elementType="C" id="hydrocodone_c6"/>
+                <atom elementType="C" id="hydrocodone_c7"/>
+                <atom elementType="C" id="hydrocodone_c8"/>
+                <atom elementType="C" id="hydrocodone_c9"/>
+                <atom elementType="C" id="hydrocodone_c10"/>
+                <atom elementType="C" id="hydrocodone_c11"/>
+                <atom elementType="C" id="hydrocodone_c12"/>
+                <atom elementType="C" id="hydrocodone_c13"/>
+                <atom elementType="C" id="hydrocodone_c14"/>
+                <atom elementType="C" id="hydrocodone_c15"/>
+                <atom elementType="C" id="hydrocodone_c16"/>
+                <atom elementType="C" id="hydrocodone_c17"/>
+                <atom elementType="C" id="hydrocodone_c18"/>
+                <atom elementType="H" id="hydrocodone_h1"/>
+                <atom elementType="H" id="hydrocodone_h2"/>
+                <atom elementType="H" id="hydrocodone_h3"/>
+                <atom elementType="H" id="hydrocodone_h4"/>
+                <atom elementType="H" id="hydrocodone_h5"/>
+                <atom elementType="H" id="hydrocodone_h6"/>
+                <atom elementType="H" id="hydrocodone_h7"/>
+                <atom elementType="H" id="hydrocodone_h8"/>
+                <atom elementType="H" id="hydrocodone_h9"/>
+                <atom elementType="H" id="hydrocodone_h10"/>
+                <atom elementType="H" id="hydrocodone_h11"/>
+                <atom elementType="H" id="hydrocodone_h12"/>
+                <atom elementType="H" id="hydrocodone_h13"/>
+                <atom elementType="H" id="hydrocodone_h14"/>
+                <atom elementType="H" id="hydrocodone_h15"/>
+                <atom elementType="H" id="hydrocodone_h16"/>
+                <atom elementType="H" id="hydrocodone_h17"/>
+                <atom elementType="H" id="hydrocodone_h18"/>
+                <atom elementType="H" id="hydrocodone_h19"/>
+                <atom elementType="H" id="hydrocodone_h20"/>
+                <atom elementType="H" id="hydrocodone_h21"/>
+                <atom elementType="N" id="hydrocodone_n1"/>
+                <atom elementType="O" id="hydrocodone_o1"/>
+                <atom elementType="O" id="hydrocodone_o2"/>
+                <atom elementType="O" id="hydrocodone_o3"/>
+            </atomArray>
+        </molecule>
+        <molecule id="nalaurylsulfoacetate">
+            <formula concise="C8 H9 N O2" title="Paracetamol"/>
+            <atomArray>
+                <atom elementType="C" id="nalaurylsulfoacetate_c1"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c2"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c3"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c4"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c5"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c6"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c7"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c8"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h1"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h2"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h3"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h4"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h5"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h6"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h7"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h8"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h9"/>
+                <atom elementType="N" id="nalaurylsulfoacetate_n1"/>
+                <atom elementType="O" id="nalaurylsulfoacetate_o1"/>
+                <atom elementType="O" id="nalaurylsulfoacetate_o2"/>
+            </atomArray>
+        </molecule>
+    </molecule>
+    <molecule id="nacitrate/nalaurylsulfoacetate/glycerol">
+        <formula title="Sodium citrate/sodium lauryl sulfoacetate/glycerol"/>
+        <molecule id="nacitrate">
+            <formula concise="C6 H5 O7 Na3" title="Sodium citrate"/>
+            <atomArray>
+                <atom elementType="C" id="nacitrate_c1"/>
+                <atom elementType="C" id="nacitrate_c2"/>
+                <atom elementType="C" id="nacitrate_c3"/>
+                <atom elementType="C" id="nacitrate_c4"/>
+                <atom elementType="C" id="nacitrate_c5"/>
+                <atom elementType="C" id="nacitrate_c6"/>
+                <atom elementType="H" id="nacitrate_h1"/>
+                <atom elementType="H" id="nacitrate_h2"/>
+                <atom elementType="H" id="nacitrate_h3"/>
+                <atom elementType="H" id="nacitrate_h4"/>
+                <atom elementType="H" id="nacitrate_h5"/>
+                <atom elementType="O" id="nacitrate_o1"/>
+                <atom elementType="O" id="nacitrate_o2"/>
+                <atom elementType="O" id="nacitrate_o3"/>
+                <atom elementType="O" id="nacitrate_o4"/>
+                <atom elementType="O" id="nacitrate_o5"/>
+                <atom elementType="O" id="nacitrate_o6"/>
+                <atom elementType="O" id="nacitrate_o7"/>
+                <atom elementType="Na" id="nacitrate_na1"/>
+                <atom elementType="Na" id="nacitrate_na2"/>
+                <atom elementType="Na" id="nacitrate_na3"/>
+            </atomArray>
+        </molecule>
+        <molecule id="nalaurylsulfoacetate">
+            <formula concise="C14 H27 Na O5 S" title="Sodium lauryl sulfoacetate"/>
+            <atomArray>
+                <atom elementType="C" id="nalaurylsulfoacetate_c1"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c2"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c3"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c4"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c5"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c6"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c7"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c8"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c9"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c10"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c11"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c12"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c13"/>
+                <atom elementType="C" id="nalaurylsulfoacetate_c14"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h1"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h2"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h3"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h4"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h5"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h6"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h7"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h8"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h9"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h10"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h11"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h12"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h13"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h14"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h15"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h16"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h17"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h18"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h19"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h20"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h21"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h22"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h23"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h24"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h25"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h26"/>
+                <atom elementType="H" id="nalaurylsulfoacetate_h27"/>
+                <atom elementType="Na" id="nalaurylsulfoacetate_na1"/>
+                <atom elementType="O" id="nalaurylsulfoacetate_o1"/>
+                <atom elementType="O" id="nalaurylsulfoacetate_o2"/>
+                <atom elementType="O" id="nalaurylsulfoacetate_o3"/>
+                <atom elementType="O" id="nalaurylsulfoacetate_o4"/>
+                <atom elementType="O" id="nalaurylsulfoacetate_o5"/>
+                <atom elementType="S" id="nalaurylsulfoacetate_s1"/>
+            </atomArray>
+        </molecule>
+        <molecule id="glycerol">
+            <formula concise="C3 H8 O3" title="Glycerol"/>
+            <atomArray>
+                <atom elementType="C" id="glycerol_c1"/>
+                <atom elementType="C" id="glycerol_c2"/>
+                <atom elementType="C" id="glycerol_c3"/>
+                <atom elementType="H" id="glycerol_h1"/>
+                <atom elementType="H" id="glycerol_h2"/>
+                <atom elementType="H" id="glycerol_h3"/>
+                <atom elementType="H" id="glycerol_h4"/>
+                <atom elementType="H" id="glycerol_h5"/>
+                <atom elementType="H" id="glycerol_h6"/>
+                <atom elementType="H" id="glycerol_h7"/>
+                <atom elementType="H" id="glycerol_h8"/>
+                <atom elementType="O" id="glycerol_o1"/>
+                <atom elementType="O" id="glycerol_o2"/>
+                <atom elementType="O" id="glycerol_o3"/>
+            </atomArray>
+        </molecule>
+    </molecule>
 </cml>
