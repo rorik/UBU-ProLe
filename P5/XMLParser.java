@@ -42,6 +42,9 @@ public class XMLParser {
             if (validation) {
                 parser.setFeature("http://xml.org/sax/features/validation", true);
                 parser.setErrorHandler(new JATSValidatorErrorHandler());
+            } else {
+                parser.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+                parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             }
         } catch (SAXNotRecognizedException e) {
             System.out.println(e.getMessage());
@@ -146,13 +149,6 @@ class JATSHandler implements ContentHandler, LexicalHandler {
             case "article.body.sec":
                 this.currentArticle.addSection();
                 break;
-        }
-
-        if (!namespaceURI.isEmpty()) {
-            if (this.longestNamespace.length() < namespaceURI.length()) {
-                this.longestNamespace = namespaceURI;
-            }
-            System.out.println(" Namespace: " + namespaceURI + " \"" + qName + "\"");
         }
     }
 
