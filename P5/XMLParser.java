@@ -100,6 +100,7 @@ class JATSHandler implements ContentHandler, LexicalHandler {
     private final List<Article> articles = new ArrayList<>();
     private int comments = 0;
     private Article currentArticle;
+    private Boolean readingDTD = false;
 
     private String getRelativePath() {
         String articlePath = this.xmlLocator.getPath();
@@ -187,7 +188,17 @@ class JATSHandler implements ContentHandler, LexicalHandler {
     }
 
     public void comment(char ch[], int start, int length) {
-        this.comments++;
+        if (!this.readingDTD) {
+            this.comments++;
+        }
+    }
+
+    public void startDTD(String name, String publicId, String systemId) {
+        this.readingDTD = true;
+    }
+
+    public void endDTD() {
+        this.readingDTD = false;
     }
 
     /* Unused methods: */
@@ -200,8 +211,6 @@ class JATSHandler implements ContentHandler, LexicalHandler {
     public void endCDATA() {}
     public void startEntity(String name) {}
     public void endEntity(String name) {}
-    public void startDTD(String name, String publicId, String systemId) {}
-    public void endDTD() {}
 }
 
 class XMLLocator {
