@@ -165,23 +165,24 @@ class JATSHandler implements ContentHandler, LexicalHandler {
 
     public void characters(char[] ch, int start, int length) throws SAXException {
         String relativePath = this.getRelativePath();
-        switch (this.getRelativePath()) {
-            case "article.front.article-meta.title-group.article-title":
-                this.currentArticle.setTitle(new String(ch, start, length).trim());
-                return;
-            case "article.front.article-meta.title-group.subtitle":
-                this.currentArticle.setSubtitle(new String(ch, start, length).trim());
-                return;
-            case "article.front.article-meta.contrib-group.contrib.name.surname":
-            case "article.front.article-meta.contrib.name.surname":
+        if (relativePath.startsWith("article.front.article-meta.")) {
+            String frontMeta = relativePath.substring(27);
+            if (frontMeta.startsWith("abstract")) {
+                this.currentArticle.appendAbstract(new String(ch, start, length).trim());
+            }
+            else if (frontMeta.startsWith("title-group.article-title")) {
+                this.currentArticle.appendTitle(new String(ch, start, length).trim());
+            }
+            else if (frontMeta.startsWith("title-group.subtitle")) {
+                this.currentArticle.appendSubtitle(new String(ch, start, length).trim());
+            }
+            else if (frontMeta.startsWith("contrib-group.contrib.name.surname")
+                    || frontMeta.startsWith("contrib.name.surname")) {
                 this.currentArticle.addAuthor(new String(ch, start, length).trim());
-                return;
-            case "article.front.article-meta.pub-date.year":
+            }
+            else if (frontMeta.equals("pub-date.year")) {
                 this.currentArticle.setPublicationYear(new String(ch, start, length).trim());
-                return;
-        }
-        if (relativePath.startsWith("article.front.article-meta.abstract")) {
-            this.currentArticle.appendAbstract(new String(ch, start, length).trim());
+            }
         }
     }
 
@@ -239,16 +240,24 @@ class Article {
     private int publicationYear = -1;
     private int sections = 0;
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void appendTitle(String title) {
+        if (this.title.isEmpty()) {
+            this.title = title;
+        } else if (!title.isEmpty()) {
+            this.title += " " + title;
+        }
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public void appendSubtitle(String subtitle) {
+        if (this.subtitle.isEmpty()) {
+            this.subtitle = subtitle;
+        } else if (!subtitle.isEmpty()) {
+            this.subtitle += " " + subtitle;
+        }
     }
 
     public String getSubtitle() {
@@ -259,7 +268,7 @@ class Article {
         if (this.abstract_text.isEmpty()) {
             this.abstract_text = abstract_text;
         } else if (!abstract_text.isEmpty()) {
-            this.abstract_text += "\n" + abstract_text;
+            this.abstract_text += " " + abstract_text;
         }
     }
 
