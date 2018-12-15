@@ -4,98 +4,108 @@
         <formula title="Ribonucleic acid"/>
         <molecule id="adenine">
             <formula concise="C5 H5 N5" title="Adenine"/>
-            <atom elementType="C" id="adenine_c1"/>
-            <atom elementType="C" id="adenine_c2"/>
-            <atom elementType="C" id="adenine_c3"/>
-            <atom elementType="C" id="adenine_c4"/>
-            <atom elementType="C" id="adenine_c5"/>
-            <atom elementType="H" id="adenine_h1"/>
-            <atom elementType="H" id="adenine_h2"/>
-            <atom elementType="H" id="adenine_h3"/>
-            <atom elementType="H" id="adenine_h4"/>
-            <atom elementType="H" id="adenine_h5"/>
-            <atom elementType="N" id="adenine_n1"/>
-            <atom elementType="N" id="adenine_n2"/>
-            <atom elementType="N" id="adenine_n3"/>
-            <atom elementType="N" id="adenine_n4"/>
-            <atom elementType="N" id="adenine_n5"/>
+            <atomArray>
+                <atom elementType="C" id="adenine_c1"/>
+                <atom elementType="C" id="adenine_c2"/>
+                <atom elementType="C" id="adenine_c3"/>
+                <atom elementType="C" id="adenine_c4"/>
+                <atom elementType="C" id="adenine_c5"/>
+                <atom elementType="H" id="adenine_h1"/>
+                <atom elementType="H" id="adenine_h2"/>
+                <atom elementType="H" id="adenine_h3"/>
+                <atom elementType="H" id="adenine_h4"/>
+                <atom elementType="H" id="adenine_h5"/>
+                <atom elementType="N" id="adenine_n1"/>
+                <atom elementType="N" id="adenine_n2"/>
+                <atom elementType="N" id="adenine_n3"/>
+                <atom elementType="N" id="adenine_n4"/>
+                <atom elementType="N" id="adenine_n5"/>
+            </atomArray>
         </molecule>
         <molecule id="cytosine">
             <formula concise="C4 H5 N3 O" title="Cytosine"/>
-            <atom elementType="C" id="cytosine_c1"/>
-            <atom elementType="C" id="cytosine_c2"/>
-            <atom elementType="C" id="cytosine_c3"/>
-            <atom elementType="C" id="cytosine_c4"/>
-            <atom elementType="H" id="cytosine_h1"/>
-            <atom elementType="H" id="cytosine_h2"/>
-            <atom elementType="H" id="cytosine_h3"/>
-            <atom elementType="H" id="cytosine_h4"/>
-            <atom elementType="H" id="cytosine_h5"/>
-            <atom elementType="N" id="cytosine_n1"/>
-            <atom elementType="N" id="cytosine_n2"/>
-            <atom elementType="N" id="cytosine_n3"/>
-            <atom elementType="O" id="cytosine_o1"/>
+            <atomArray>
+                <atom elementType="C" id="cytosine_c1"/>
+                <atom elementType="C" id="cytosine_c2"/>
+                <atom elementType="C" id="cytosine_c3"/>
+                <atom elementType="C" id="cytosine_c4"/>
+                <atom elementType="H" id="cytosine_h1"/>
+                <atom elementType="H" id="cytosine_h2"/>
+                <atom elementType="H" id="cytosine_h3"/>
+                <atom elementType="H" id="cytosine_h4"/>
+                <atom elementType="H" id="cytosine_h5"/>
+                <atom elementType="N" id="cytosine_n1"/>
+                <atom elementType="N" id="cytosine_n2"/>
+                <atom elementType="N" id="cytosine_n3"/>
+                <atom elementType="O" id="cytosine_o1"/>
+            </atomArray>
         </molecule>
         <molecule id="guanine">
             <formula concise="C5 H5 N5 O" title="Guanine"/>
-            <atom elementType="C" id="guanine_c1"/>
-            <atom elementType="C" id="guanine_c2"/>
-            <atom elementType="C" id="guanine_c3"/>
-            <atom elementType="C" id="guanine_c4"/>
-            <atom elementType="C" id="guanine_c5"/>
-            <atom elementType="H" id="guanine_h1"/>
-            <atom elementType="H" id="guanine_h2"/>
-            <atom elementType="H" id="guanine_h3"/>
-            <atom elementType="H" id="guanine_h4"/>
-            <atom elementType="H" id="guanine_h5"/>
-            <atom elementType="N" id="guanine_n1"/>
-            <atom elementType="N" id="guanine_n2"/>
-            <atom elementType="N" id="guanine_n3"/>
-            <atom elementType="N" id="guanine_n4"/>
-            <atom elementType="N" id="guanine_n5"/>
-            <atom elementType="O" id="guanine_o1"/>
+            <atomArray>
+                <atom elementType="C" id="guanine_c1"/>
+                <atom elementType="C" id="guanine_c2"/>
+                <atom elementType="C" id="guanine_c3"/>
+                <atom elementType="C" id="guanine_c4"/>
+                <atom elementType="C" id="guanine_c5"/>
+                <atom elementType="H" id="guanine_h1"/>
+                <atom elementType="H" id="guanine_h2"/>
+                <atom elementType="H" id="guanine_h3"/>
+                <atom elementType="H" id="guanine_h4"/>
+                <atom elementType="H" id="guanine_h5"/>
+                <atom elementType="N" id="guanine_n1"/>
+                <atom elementType="N" id="guanine_n2"/>
+                <atom elementType="N" id="guanine_n3"/>
+                <atom elementType="N" id="guanine_n4"/>
+                <atom elementType="N" id="guanine_n5"/>
+                <atom elementType="O" id="guanine_o1"/>
+            </atomArray>
         </molecule>
         <molecule id="uracil">
             <formula concise="C4 H4 N2 O2" title="Uracil"/>
-            <atom elementType="C" id="uracil_c1"/>
-            <atom elementType="C" id="uracil_c2"/>
-            <atom elementType="C" id="uracil_c3"/>
-            <atom elementType="C" id="uracil_c4"/>
-            <atom elementType="H" id="uracil_h1"/>
-            <atom elementType="H" id="uracil_h2"/>
-            <atom elementType="H" id="uracil_h3"/>
-            <atom elementType="H" id="uracil_h4"/>
-            <atom elementType="N" id="uracil_n1"/>
-            <atom elementType="N" id="uracil_n2"/>
-            <atom elementType="O" id="uracil_o1"/>
-            <atom elementType="O" id="uracil_o2"/>
+            <atomArray>
+                <atom elementType="C" id="uracil_c1"/>
+                <atom elementType="C" id="uracil_c2"/>
+                <atom elementType="C" id="uracil_c3"/>
+                <atom elementType="C" id="uracil_c4"/>
+                <atom elementType="H" id="uracil_h1"/>
+                <atom elementType="H" id="uracil_h2"/>
+                <atom elementType="H" id="uracil_h3"/>
+                <atom elementType="H" id="uracil_h4"/>
+                <atom elementType="N" id="uracil_n1"/>
+                <atom elementType="N" id="uracil_n2"/>
+                <atom elementType="O" id="uracil_o1"/>
+                <atom elementType="O" id="uracil_o2"/>
+            </atomArray>
         </molecule>
         <molecule id="ribose">
             <formula concise="C5 H10 O5" title="Ribose"/>
-            <atom elementType="C" id="ribose_c1"/>
-            <atom elementType="C" id="ribose_c2"/>
-            <atom elementType="C" id="ribose_c3"/>
-            <atom elementType="C" id="ribose_c4"/>
-            <atom elementType="C" id="ribose_c5"/>
-            <atom elementType="H" id="ribose_h1"/>
-            <atom elementType="H" id="ribose_h2"/>
-            <atom elementType="H" id="ribose_h3"/>
-            <atom elementType="H" id="ribose_h4"/>
-            <atom elementType="H" id="ribose_h5"/>
-            <atom elementType="H" id="ribose_h6"/>
-            <atom elementType="H" id="ribose_h7"/>
-            <atom elementType="H" id="ribose_h8"/>
-            <atom elementType="H" id="ribose_h9"/>
-            <atom elementType="H" id="ribose_h10"/>
-            <atom elementType="O" id="ribose_o1"/>
-            <atom elementType="O" id="ribose_o2"/>
-            <atom elementType="O" id="ribose_o3"/>
-            <atom elementType="O" id="ribose_o4"/>
-            <atom elementType="O" id="ribose_o5"/>
+            <atomArray>
+                <atom elementType="C" id="ribose_c1"/>
+                <atom elementType="C" id="ribose_c2"/>
+                <atom elementType="C" id="ribose_c3"/>
+                <atom elementType="C" id="ribose_c4"/>
+                <atom elementType="C" id="ribose_c5"/>
+                <atom elementType="H" id="ribose_h1"/>
+                <atom elementType="H" id="ribose_h2"/>
+                <atom elementType="H" id="ribose_h3"/>
+                <atom elementType="H" id="ribose_h4"/>
+                <atom elementType="H" id="ribose_h5"/>
+                <atom elementType="H" id="ribose_h6"/>
+                <atom elementType="H" id="ribose_h7"/>
+                <atom elementType="H" id="ribose_h8"/>
+                <atom elementType="H" id="ribose_h9"/>
+                <atom elementType="H" id="ribose_h10"/>
+                <atom elementType="O" id="ribose_o1"/>
+                <atom elementType="O" id="ribose_o2"/>
+                <atom elementType="O" id="ribose_o3"/>
+                <atom elementType="O" id="ribose_o4"/>
+                <atom elementType="O" id="ribose_o5"/>
+            </atomArray>
         </molecule>
     </molecule>
     <molecule id="hydrocodone/apap">
-        <formula title="Hydrocodone/nalaurylsulfoacetate"/>
+        <formula title="Hydrocodone/APAP"/>
         <molecule id="hydrocodone">
             <formula concise="C18 H21 N O3" title="Hydrocodone"/>
             <atomArray>
@@ -144,7 +154,7 @@
                 <atom elementType="O" id="hydrocodone_o3"/>
             </atomArray>
         </molecule>
-        <molecule id="nalaurylsulfoacetate">
+        <molecule id="apap">
             <formula concise="C8 H9 N O2" title="Paracetamol"/>
             <atomArray>
                 <atom elementType="C" id="nalaurylsulfoacetate_c1"/>
@@ -269,6 +279,56 @@
                 <atom elementType="O" id="glycerol_o2"/>
                 <atom elementType="O" id="glycerol_o3"/>
             </atomArray>
+        </molecule>
+    </molecule>
+    <molecule id="neodymiumaluminiumborate">
+        <formula title="Neodymium aluminium borate"/>
+        <molecule id="neodymiumaluminium">
+            <formula concise="Nd Al3" title="Neodymium aluminium"/>
+            <atomArray>
+                <atom elementType="Nd" id="neodymiumaluminium_nd1"/>
+                <atom elementType="Al" id="neodymiumaluminium_al1"/>
+                <atom elementType="Al" id="neodymiumaluminium_al2"/>
+                <atom elementType="Al" id="neodymiumaluminium_al3"/>
+            </atomArray>
+        </molecule>
+        <molecule id="borate4">
+            <molecule id="borate4_1">
+                <formula concise="B O3" title="Borate"/>
+                <atomArray>
+                    <atom elementType="B" id="borate1_b1"/>
+                    <atom elementType="O" id="borate1_o1"/>
+                    <atom elementType="O" id="borate1_o2"/>
+                    <atom elementType="O" id="borate1_o3"/>
+                </atomArray>
+            </molecule>
+            <molecule id="borate4_2">
+                <formula concise="B O3" title="Borate"/>
+                <atomArray>
+                    <atom elementType="B" id="borate2_b1"/>
+                    <atom elementType="O" id="borate2_o1"/>
+                    <atom elementType="O" id="borate2_o2"/>
+                    <atom elementType="O" id="borate2_o3"/>
+                </atomArray>
+            </molecule>
+            <molecule id="borate4_3">
+                <formula concise="B O3" title="Borate"/>
+                <atomArray>
+                    <atom elementType="B" id="borate3_b1"/>
+                    <atom elementType="O" id="borate3_o1"/>
+                    <atom elementType="O" id="borate3_o2"/>
+                    <atom elementType="O" id="borate3_o3"/>
+                </atomArray>
+            </molecule>
+            <molecule id="borate4_4">
+                <formula concise="B O3" title="Borate"/>
+                <atomArray>
+                    <atom elementType="B" id="borate4_b1"/>
+                    <atom elementType="O" id="borate4_o1"/>
+                    <atom elementType="O" id="borate4_o2"/>
+                    <atom elementType="O" id="borate4_o3"/>
+                </atomArray>
+            </molecule>
         </molecule>
     </molecule>
 </cml>
