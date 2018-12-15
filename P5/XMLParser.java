@@ -1,4 +1,3 @@
-
 /* XMLParser imports */
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,17 +37,23 @@ public class XMLParser {
      */
     public void parse(String uri, Boolean validation) {
         final XMLReader parser;
-        try {
-           parser = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
-        } catch (SAXException e) {
-            System.out.println(e.getMessage());
-            return;
-        }
         final JATSHandler handler = new JATSHandler();
 
+        /* Create the parser */
         try {
+            parser = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+        } catch (SAXException e) {
+            System.err.println("Unexpected exception while creating XML Reader, " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        /* Set the lexical and content handler and the validator */
+        try {
+            /* Set the lexical and content handler */
             parser.setProperty("http://xml.org/sax/properties/lexical-handler", handler);
             parser.setContentHandler(handler);
+
+            /* Set the validator if enabled */
             if (validation) {
                 parser.setFeature("http://xml.org/sax/features/validation", true);
                 parser.setErrorHandler(new JATSValidatorErrorHandler());
@@ -56,22 +61,25 @@ public class XMLParser {
                 parser.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
                 parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             }
-        } catch (SAXNotRecognizedException e) {
-            System.out.println(e.getMessage());
-            return;
-        } catch (SAXNotSupportedException e) {
-            System.out.println(e.getMessage());
-            return;
+        } catch (SAXNotRecognizedException ex) {
+            System.err.println("Unrecognized feature or property identifier found by SAX, " + ex.getMessage());
+            throw new RuntimeException("Unrecognized feature or property identifier found by SAX", ex);
+        } catch (SAXNotSupportedException ex) {
+            System.err.println("SAX couldn't perform the requested operation, " + ex.getMessage());
+            throw new RuntimeException("SAX couldn't perform the requested operation", ex);
         }
 
+        /* Starts parsing the given file */
         try {
             InputSource inputSource = new InputSource();
             inputSource.setCharacterStream(new InputStreamReader(new FileInputStream(new File(uri))));
             parser.parse(inputSource);
-        } catch (IOException e) {
-            System.out.println("Error accessing the file: " + e.getMessage());
-        } catch (SAXException e) {
-            System.out.println("Parsing error: " + e.getMessage());
+        } catch (IOException ex) {
+            System.err.println("Error accessing the file: " + ex.getMessage());
+            throw new RuntimeException("Error accessing the file", ex);
+        } catch (SAXException ex) {
+            System.err.println("Parsing error: " + ex.getMessage());
+            throw new RuntimeException("Parsing error", ex);
         }
     }
 
@@ -104,7 +112,7 @@ class JATSValidatorErrorHandler implements ErrorHandler {
      *
      * @param exception the validation exception.
      */
-    public void warning (SAXParseException exception) throws SAXException {
+    public void warning (SAXParseException exception) {
         System.err.println("------ VALIDATION WARNING ------");
         System.err.println(exception.getMessage());
         System.err.println("--------------------------------");
@@ -115,7 +123,7 @@ class JATSValidatorErrorHandler implements ErrorHandler {
      *
      * @param exception the validation exception.
      */
-    public void error (SAXParseException exception) throws SAXException {
+    public void error (SAXParseException exception) {
         System.err.println("------ VALIDATION ERROR ------");
         System.err.println(exception.getMessage());
         System.err.println("------------------------------");
@@ -126,7 +134,7 @@ class JATSValidatorErrorHandler implements ErrorHandler {
      *
      * @param exception the validation exception.
      */
-    public void fatalError (SAXParseException exception) throws SAXException {
+    public void fatalError (SAXParseException exception) {
         System.err.println("------ VALIDATION FATAL ERROR ------");
         System.err.println(exception.getMessage());
         System.err.println("------------------------------------");
@@ -209,11 +217,8 @@ class JATSHandler implements ContentHandler, LexicalHandler {
 
     /**
      * Ends the parsing of the file and shows the result.
-     *
-     * @throws org.xml.sax.SAXException any SAX exception, possibly
-     *            wrapping another exception.
      */
-    public void endDocument() throws SAXException {
+    public void endDocument() {
         System.out.println("- El espacio de nombres más largo: " + longestNamespace);
         String longestAbstract = this.articles.stream()
             .max((a, b) -> a.getAbstract().length() - b.getAbstract().length())
@@ -256,11 +261,8 @@ class JATSHandler implements ContentHandler, LexicalHandler {
      *        there are no attributes, it shall be an empty
      *        Attributes object.  The value of this object after
      *        startElement returns is undefined.
-     * @throws org.xml.sax.SAXException any SAX exception, possibly
-     *            wrapping another exception.
      */
-    public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
-            throws SAXException {
+    public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
         this.xmlLocator.push(localName);
         switch (this.getRelativePath()) {
             case "article":
@@ -284,10 +286,8 @@ class JATSHandler implements ContentHandler, LexicalHandler {
      *        performed.
      * @param qName the qualified XML name (with prefix), or the
      *        empty string if qualified names are not available.
-     * @throws org.xml.sax.SAXException any SAX exception, possibly
-     *            wrapping another exception.
      */
-    public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+    public void endElement(String namespaceURI, String localName, String qName) {
         if (this.getRelativePath().equals("article")) {
             this.articles.add(this.currentArticle);
             this.currentArticle = null;
@@ -299,12 +299,10 @@ class JATSHandler implements ContentHandler, LexicalHandler {
      * Parses the characters inside a tag.
      *
      * @param ch the characters from the XML document.
-     * @param start the start position in the array
-     * @param length the number of characters to read from the array
-     * @throws org.xml.sax.SAXException any SAX exception, possibly
-     *            wrapping another exception
+     * @param start the start position in the array.
+     * @param length the number of characters to read from the array.
      */
-    public void characters(char[] ch, int start, int length) throws SAXException {
+    public void characters(char[] ch, int start, int length) {
         String relativePath = this.getRelativePath();
         if (relativePath.startsWith("article.front.article-meta.")) {
             String frontMeta = relativePath.substring(27);
@@ -329,11 +327,11 @@ class JATSHandler implements ContentHandler, LexicalHandler {
 
 
     /**
-     * Parses a XML comment.
+     * Parses an XML comment.
      *
      * @param ch the characters from the XML document.
-     * @param start the start position in the array
-     * @param length the number of characters to read from the array
+     * @param start the start position in the array.
+     * @param length the number of characters to read from the array.
      */
     public void comment(char ch[], int start, int length) {
         if (!this.readingDTD) {
@@ -364,11 +362,11 @@ class JATSHandler implements ContentHandler, LexicalHandler {
     }
 
     /* Unused methods: */
-    public void startDocument() throws SAXException {}
+    public void startDocument() {}
     public void endPrefixMapping(String prefix) {}
-    public void processingInstruction(String target, String data) throws SAXException {}
-    public void ignorableWhitespace(char[] ch, int start, int end) throws SAXException {}
-    public void skippedEntity(String name) throws SAXException {}
+    public void processingInstruction(String target, String data) {}
+    public void ignorableWhitespace(char[] ch, int start, int end) {}
+    public void skippedEntity(String name) {}
     public void startCDATA() {}
     public void endCDATA() {}
     public void startEntity(String name) {}
