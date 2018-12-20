@@ -332,20 +332,6 @@ class XMLLocator {
     }
 
     /**
-     * Returns the current level.
-     */
-    public String getElement() {
-        return this.position.peek();
-    }
-
-    /**
-     * Returns the depth of the current level.
-     */
-    public int getLevel() {
-        return this.position.size();
-    }
-
-    /**
      * Returns a list with the current route in ascending depth order.
      *
      * @return a list with the current route in ascending depth order.
@@ -521,6 +507,25 @@ class Molecule {
     }
 
     /**
+     * Returns the type of molecule according to the number of atoms.
+     *
+     * @return the type of molecule according to the number of atoms.
+     */
+    public String getAtomicCategorization() {
+        List<String> allElements = getAllElements();
+        if (allElements.size() == 1) {
+            return "monatomic";
+        } else if (allElements.size() == 2) {
+            return "diatomic";
+        } else if (allElements.size() == 3) {
+            return "triatomic";
+        } else if (allElements.size() > 3) {
+            return "polyatomic";
+        }
+        return "";
+    }
+
+    /**
      * Returns a summary of the molecule:
      * Name, formula, atoms, elements, organic/inorganic, sub-molecules.
      *
@@ -530,7 +535,7 @@ class Molecule {
     public String toString() {
         return "\"" + getName() + "\" made of " + getFormula() +
             " (" + getAllElements().size() + " atoms, " + getElementMap().size() + " elements)" +
-            ". It is an " + (isOrganic() ? "organic" : "inorganic") + " compound." +
+            ". It is an " + (isOrganic() ? "organic " : "inorganic ") + getAtomicCategorization() + " compound." +
             (getSubMolecules().size() == 0 ? "" : " It has " + getSubMolecules().size() + " sub-molecules:");
     }
 }
