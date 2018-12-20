@@ -79,7 +79,7 @@ public class CMLParser {
      */
     public static void main(String[] args) {
         if (args.length == 0 || args.length > 2) {
-            System.err.println("XML file expected, usage: java CMLParser [XML URI] ([VALIDATION FLAG (ANY)])");
+            System.err.println("XML file expected, usage: java CMLParser [XML URI]");
             System.exit(0);
         }
         CMLParser parser = new CMLParser();
