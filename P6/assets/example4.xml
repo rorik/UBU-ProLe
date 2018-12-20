@@ -157,26 +157,26 @@
         <molecule id="apap">
             <formula concise="C8 H9 N O2" title="Paracetamol"/>
             <atomArray>
-                <atom elementType="C" id="nalaurylsulfoacetate_c1"/>
-                <atom elementType="C" id="nalaurylsulfoacetate_c2"/>
-                <atom elementType="C" id="nalaurylsulfoacetate_c3"/>
-                <atom elementType="C" id="nalaurylsulfoacetate_c4"/>
-                <atom elementType="C" id="nalaurylsulfoacetate_c5"/>
-                <atom elementType="C" id="nalaurylsulfoacetate_c6"/>
-                <atom elementType="C" id="nalaurylsulfoacetate_c7"/>
-                <atom elementType="C" id="nalaurylsulfoacetate_c8"/>
-                <atom elementType="H" id="nalaurylsulfoacetate_h1"/>
-                <atom elementType="H" id="nalaurylsulfoacetate_h2"/>
-                <atom elementType="H" id="nalaurylsulfoacetate_h3"/>
-                <atom elementType="H" id="nalaurylsulfoacetate_h4"/>
-                <atom elementType="H" id="nalaurylsulfoacetate_h5"/>
-                <atom elementType="H" id="nalaurylsulfoacetate_h6"/>
-                <atom elementType="H" id="nalaurylsulfoacetate_h7"/>
-                <atom elementType="H" id="nalaurylsulfoacetate_h8"/>
-                <atom elementType="H" id="nalaurylsulfoacetate_h9"/>
-                <atom elementType="N" id="nalaurylsulfoacetate_n1"/>
-                <atom elementType="O" id="nalaurylsulfoacetate_o1"/>
-                <atom elementType="O" id="nalaurylsulfoacetate_o2"/>
+                <atom elementType="C" id="apap_c1"/>
+                <atom elementType="C" id="apap_c2"/>
+                <atom elementType="C" id="apap_c3"/>
+                <atom elementType="C" id="apap_c4"/>
+                <atom elementType="C" id="apap_c5"/>
+                <atom elementType="C" id="apap_c6"/>
+                <atom elementType="C" id="apap_c7"/>
+                <atom elementType="C" id="apap_c8"/>
+                <atom elementType="H" id="apap_h1"/>
+                <atom elementType="H" id="apap_h2"/>
+                <atom elementType="H" id="apap_h3"/>
+                <atom elementType="H" id="apap_h4"/>
+                <atom elementType="H" id="apap_h5"/>
+                <atom elementType="H" id="apap_h6"/>
+                <atom elementType="H" id="apap_h7"/>
+                <atom elementType="H" id="apap_h8"/>
+                <atom elementType="H" id="apap_h9"/>
+                <atom elementType="N" id="apap_n1"/>
+                <atom elementType="O" id="apap_o1"/>
+                <atom elementType="O" id="apap_o2"/>
             </atomArray>
         </molecule>
     </molecule>
